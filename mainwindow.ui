@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1267</width>
+    <height>903</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Pastie</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>32</width>
+    <height>32</height>
+   </size>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Triangular</enum>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QSplitter" name="splitterV">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="QSplitter" name="splitterH">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <widget class="Viewer" name="viewer" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>320</width>
+          <height>240</height>
+         </size>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::DefaultContextMenu</enum>
+        </property>
+       </widget>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>400</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="tabShape">
+         <enum>QTabWidget::Rounded</enum>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="TabImages" name="tabImages">
+         <attribute name="title">
+          <string>Images</string>
+         </attribute>
+        </widget>
+        <widget class="TabFilters" name="tabFilters">
+         <attribute name="title">
+          <string>Filters</string>
+         </attribute>
+        </widget>
+        <widget class="TabCamera" name="tabCamera">
+         <attribute name="title">
+          <string>Camera</string>
+         </attribute>
+        </widget>
+        <widget class="TabCalibration" name="tabCalibration">
+         <attribute name="title">
+          <string>Calibration</string>
+         </attribute>
+        </widget>
+       </widget>
+      </widget>
+      <widget class="Console" name="logConsole">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="undoRedoEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="plainText">
+        <string/>
+       </property>
+       <property name="centerOnScroll">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>24</width>
+     <height>24</height>
+    </size>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionLoad"/>
+   <addaction name="actionSave"/>
+   <addaction name="actionClear"/>
+   <addaction name="separator"/>
+   <addaction name="actionPlay"/>
+   <addaction name="actionSnapshot"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrevImage"/>
+   <addaction name="actionRedraw"/>
+   <addaction name="actionNextImage"/>
+   <addaction name="separator"/>
+   <addaction name="actionCalibrate"/>
+   <addaction name="actionReset"/>
+   <addaction name="separator"/>
+   <addaction name="actionExit"/>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1267</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>true</bool>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>Images</string>
+    </property>
+    <addaction name="actionLoad"/>
+    <addaction name="actionClear"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>?</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <widget class="QMenu" name="menuCamera">
+    <property name="title">
+     <string>Camera</string>
+    </property>
+    <addaction name="actionSnapshot"/>
+    <addaction name="actionPlay"/>
+    <addaction name="actionCalibrate"/>
+   </widget>
+   <widget class="QMenu" name="menuTabs">
+    <property name="title">
+     <string>Tabs</string>
+    </property>
+    <addaction name="actionTabImages"/>
+    <addaction name="actionTabCamera"/>
+    <addaction name="actionTabFilters"/>
+    <addaction name="actionTabCalibration"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuCamera"/>
+   <addaction name="menuTabs"/>
+   <addaction name="menu"/>
+  </widget>
+  <action name="actionLoad">
+   <property name="icon">
+    <iconset theme="document-open" resource="images.qrc">
+     <normaloff>:/icons/resources/document-open.png</normaloff>:/icons/resources/document-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load</string>
+   </property>
+   <property name="toolTip">
+    <string>Load images from files</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/icons/resources/system-log-out.png</normaloff>:/icons/resources/system-log-out.png</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>Quit program</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionCalibrate">
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/icons/resources/calibrate.png</normaloff>:/icons/resources/calibrate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Calibrate</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionClear">
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/icons/resources/edit-clear.png</normaloff>:/icons/resources/edit-clear.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clear</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove all images from the list</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionPlay">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/icons/resources/media-playback-start.png</normaloff>
+     <normalon>:/icons/resources/media-playback-stop.png</normalon>:/icons/resources/media-playback-start.png</iconset>
+   </property>
+   <property name="text">
+    <string>Start / Stop</string>
+   </property>
+   <property name="toolTip">
+    <string>Start / Stop the live preview</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionSnapshot">
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/icons/resources/camera-photo.png</normaloff>:/icons/resources/camera-photo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Snapshot</string>
+   </property>
+   <property name="toolTip">
+    <string>Take a snapshot of the current viewfinder</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionPrevImage">
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/icons/resources/go-previous.png</normaloff>:/icons/resources/go-previous.png</iconset>
+   </property>
+   <property name="text">
+    <string>Previous Image</string>
+   </property>
+   <property name="toolTip">
+    <string>Show previous image from list</string>
+   </property>
+   <property name="shortcut">
+    <string>Down</string>
+   </property>
+  </action>
+  <action name="actionNextImage">
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/icons/resources/go-next.png</normaloff>:/icons/resources/go-next.png</iconset>
+   </property>
+   <property name="text">
+    <string>Next Image</string>
+   </property>
+   <property name="toolTip">
+    <string>Show next image from list</string>
+   </property>
+   <property name="shortcut">
+    <string>Up</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/icons/resources/document-save.png</normaloff>:/icons/resources/document-save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save the current image to a file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/icons/resources/edit-undo.png</normaloff>:/icons/resources/edit-undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reset Calibration</string>
+   </property>
+   <property name="toolTip">
+    <string>Reset camera matrix and distortion coefficients obtained through calibration</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionTabImages">
+   <property name="text">
+    <string>Images</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
+  <action name="actionTabFilters">
+   <property name="text">
+    <string>Filters</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
+   </property>
+  </action>
+  <action name="actionTabCamera">
+   <property name="text">
+    <string>Camera</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
+  </action>
+  <action name="actionTabCalibration">
+   <property name="text">
+    <string>Calibration</string>
+   </property>
+   <property name="shortcut">
+    <string>F4</string>
+   </property>
+  </action>
+  <action name="actionRedraw">
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/icons/resources/view-refresh.png</normaloff>:/icons/resources/view-refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Redraw</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>Viewer</class>
+   <extends>QWidget</extends>
+   <header>viewer.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Console</class>
+   <extends>QPlainTextEdit</extends>
+   <header>console.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TabImages</class>
+   <extends>QWidget</extends>
+   <header>tabimages.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TabFilters</class>
+   <extends>QWidget</extends>
+   <header>tabfilters.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TabCamera</class>
+   <extends>QWidget</extends>
+   <header>tabcamera.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TabCalibration</class>
+   <extends>QWidget</extends>
+   <header>tabcalibration.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="images.qrc"/>
+ </resources>
+ <connections/>
+ <slots>
+  <slot>showAbout()</slot>
+ </slots>
+</ui>
