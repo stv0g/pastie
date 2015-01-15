@@ -5,7 +5,6 @@
         <file>resources/chess.png</file>
         <file>resources/circ.png</file>
         <file>resources/acirc.png</file>
-        <file>resources/Boris.png</file>
         <file>resources/camera-photo.png</file>
         <file>resources/cap5h.jpg</file>
         <file>resources/chess.svg</file>
@@ -24,6 +23,12 @@
         <file>resources/list-add.png</file>
         <file>resources/list-remove.png</file>
         <file>resources/view-refresh.png</file>
+        <file>resources/go-down.png</file>
+        <file>resources/go-home.png</file>
+        <file>resources/go-up.png</file>
+        <file>resources/octoprint.png</file>
+        <file>resources/go-bottom.png</file>
+        <file>resources/go-top.png</file>
     </qresource>
     <qresource prefix="/math">
         <file>resources/matbr_left.png</file>
