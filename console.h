@@ -12,9 +12,13 @@ class Console : public QPlainTextEdit
 
 		void setup();
 
+		void log(QString msg, QtMsgType type);
+
 	protected:
 		DebugStream qcout;
 		DebugStream qcerr;
+
+		QString format(QString msg, QtMsgType type);
 };
 
 #endif // CONSOLE_H

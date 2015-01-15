@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+class Console;
+
 class DebugStream : public std::basic_streambuf<char>
 {
 
@@ -14,7 +16,7 @@ public:
 	~DebugStream();
 
 	static QString format(QString msg, QtMsgType type = QtDebugMsg);
-	static void registerConsole(QPlainTextEdit *);
+	static void registerConsole(Console *);
 	static void registerHandler();
 
 protected:
@@ -30,7 +32,7 @@ private:
 
 	static void handler(QtMsgType type, const QString &msg);
 	static void handler(QtMsgType type, const QMessageLogContext &, const QString &str);
-	static QPlainTextEdit *console;
+	static Console *console;
 };
 
 #endif // DEBUGSTREAM_H

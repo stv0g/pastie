@@ -1,8 +1,9 @@
 #include <QtDebug>
 
+#include "console.h"
 #include "debugstream.h"
 
-QPlainTextEdit *DebugStream::console;
+Console *DebugStream::console;
 
 DebugStream::DebugStream(std::ostream &s, QtMsgType t) :
 	stream(s),
@@ -49,34 +50,24 @@ int DebugStream::overflow(int v)
 	return v;
 }
 
-QString DebugStream::format(QString msg, QtMsgType type)
-{
-	QString out("<pre><div style='font-weight: bold; color: %1'>[%2]</div> %3</pre>");
 
-	switch (type) {
-		case QtDebugMsg:    out = out.arg("Gray").arg("Debug   "); break;
-		case QtWarningMsg:  out = out.arg("Orange").arg("Warning "); break;
-		case QtCriticalMsg: out = out.arg("DarkRed").arg("Critical"); break;
-		case QtFatalMsg:    out = out.arg("Magenta").arg("Fatal   "); break;
-	}
-
-	return out.arg(msg);
-}
 
 void DebugStream::registerHandler()
 {
 	qInstallMessageHandler(DebugStream::handler);
 }
 
-void DebugStream::registerConsole(QPlainTextEdit *pte)
+void DebugStream::registerConsole(Console *con)
 {
-	console = pte;
+	console = con;
 }
 
 void DebugStream::handler(QtMsgType type, const QString &msg)
 {
 	static int dropped;
 	static int next = 1;
+
+	// FIXME: dirty workaround
 	if (msg == "Camera dropped frame!") {
 		if (++dropped == next) {
 			next = next + next*2;
@@ -87,9 +78,9 @@ void DebugStream::handler(QtMsgType type, const QString &msg)
 	}
 
 	if (console)
-		console->appendHtml(format(msg, type));
-	else
-		printf("%s\n", (const char *) QByteArray(msg.toLocal8Bit().constData()));
+		console->log(msg, type);
+
+	printf("%s\n", (const char *) QByteArray(msg.toLocal8Bit().constData()));
 }
 
 void DebugStream::handler(QtMsgType type, const QMessageLogContext &, const QString &msg)
