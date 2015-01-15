@@ -6,13 +6,18 @@
 class Watershed : public Filter
 {
 	public:
-		Watershed();
-
 		QString getName() const { return "Watershed"; }
+
+		bool clicked(Point pos, QMouseEvent *me = 0);
+
+	public slots:
+		void reset();
 
 	protected:
 		Result * applyInternal(Image *img);
 
+		QList<Point> addMarkers;
+		QList<Point> delMarkers;
 };
 
 #endif // WATERSHED_H

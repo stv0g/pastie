@@ -7,11 +7,13 @@
 #include <QVector>
 #include <QPainter>
 #include <QWidget>
+#include <QMouseEvent>
 
 #include "painter.h"
 #include "image.h"
 #include "result.h"
 #include "setting.h"
+#include "range.h"
 
 using namespace cv;
 
@@ -39,6 +41,7 @@ class Filter : public QObject
 
 	public slots:
 		virtual void reset() { }
+		virtual bool clicked(Point, QMouseEvent * = 0) { return false; }
 
 	signals:
 		void filterChanged();

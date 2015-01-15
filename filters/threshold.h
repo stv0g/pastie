@@ -24,6 +24,7 @@ class Threshold : public Filter
 		Result * applyInternal(Image *img);
 
 		enum Threshold::Type type;
+		int method;
 		bool invert = false;
 		int size;
 		double value, c;

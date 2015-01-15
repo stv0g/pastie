@@ -6,11 +6,21 @@
 class PadFilter : public Filter
 {
 	public:
-		QString getName() const { return "PadFilter"; };
+		PadFilter(Filter *source);
+
+		QString getName() const { return "PadFilter"; }
+
+		bool clicked(Point p, QMouseEvent *me);
+		void reset();
 
 	protected:
 		Result * applyInternal(Image *img);
 
+		Filter *source;
+
+		Range<double> areaRange, ratioRange;
+
+		QList<Point> addPoints, delPoints;
 };
 
 #endif // PADFILTER_H

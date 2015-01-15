@@ -12,7 +12,11 @@ EdgeDetect::EdgeDetect(double t, double r) :
 
 Result * EdgeDetect::applyInternal(Image *img)
 {
-	Canny(img->filtered, img->filtered, threshold, threshold * ratio);
+	Mat &m = img->getMat();
+
+	CV_Assert(m.channels() == 1);
+
+	Canny(m, m, threshold, threshold * ratio);
 
 	return NULL;
 }

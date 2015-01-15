@@ -1,23 +1,38 @@
 #ifndef RESULT_H
 #define RESULT_H
 
+#include <opencv2/core.hpp>
+
+#include <QTransform>
 #include <QString>
+
+using namespace cv;
 
 class Painter;
 
 class Result
 {
 	public:
+		Result(QTransform t = QTransform()) :
+			transform(t)
+		{ }
+
 		virtual ~Result() { };
 
-		virtual void draw(Painter *) const { };
-		virtual QString getResult() const = 0;
+		QTransform getTransform() { return transform; }
+
+		virtual QString getResult() const { return ""; };
+		virtual void drawResult(Painter *) const { };
+
+	protected:
+		QTransform transform;
 };
 
 class IntegerResult : public Result
 {
 	public:
-		IntegerResult(QString n, int v) :
+		IntegerResult(QString n, int v, QTransform t = QTransform()) :
+			Result(t),
 			name(n),
 			value(v)
 		 { }
@@ -34,7 +49,8 @@ class IntegerResult : public Result
 class DoubleResult : public Result
 {
 	public:
-		DoubleResult(QString n, double v) :
+		DoubleResult(QString n, double v, QTransform t = QTransform()) :
+			Result(t),
 			name(n),
 			value(v)
 		 { }

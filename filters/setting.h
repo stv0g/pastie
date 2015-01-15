@@ -9,6 +9,8 @@
 #include <QMap>
 
 #include <opencv2/core.hpp>
+#include "rangeslider.h"
+#include "range.h"
 
 using namespace cv;
 
@@ -33,22 +35,6 @@ class Setting : public QObject
 		QString toolTip;
 };
 
-class IntegerSetting : public Setting
-{
-	Q_OBJECT
-
-	public:
-		IntegerSetting(Filter *f, int &v, int mi = 0, int ma = 100, QString tip = "") :
-			Setting(f, tip), value(v), min(mi), max(ma) { }
-
-	protected:
-		QWidget * createWidget(QWidget *parent = 0);
-
-		int &value, min, max;
-		QSpinBox *spinner;
-		QSlider *slider;
-};
-
 class BooleanSetting : public Setting
 {
 	Q_OBJECT
@@ -64,22 +50,84 @@ class BooleanSetting : public Setting
 		QCheckBox *box;
 };
 
+class IntegerSetting : public Setting
+{
+	Q_OBJECT
+
+	public:
+		IntegerSetting(Filter *f, int &v, Range<int> l = Range<int>(0, 100), QString tip = "") :
+			Setting(f, tip), value(v), limits(l) { }
+
+	protected:
+		QWidget * createWidget(QWidget *parent = 0);
+
+		int &value;
+		Range<int> limits;
+		QSpinBox *spinner;
+		QSlider *slider;
+};
+
 class DoubleSetting : public Setting
 {
 	Q_OBJECT
 
 	public:
-		DoubleSetting(Filter *f, double &v, double mi = 0, double ma = 100, QString tip = "") :
-			Setting(f, tip), value(v), min(mi), max(ma) { }
+		DoubleSetting(Filter *f, double &v, Range<double> l = Range<double>(0, 100), QString tip = "") :
+			Setting(f, tip), value(v), limits(l) { }
 
 	protected:
 		static const int SCALE = 1000;
 
 		QWidget * createWidget(QWidget *parent = 0);
 
-		double &value, min, max;
+		double &value;
+		Range<double> limits;
 		QDoubleSpinBox *spinner;
 		QSlider *slider;
+
+		double getSliderValue(int v);
+		void setSliderValue(double value);
+};
+
+class RangeSetting : public Setting
+{
+		Q_OBJECT
+
+	public:
+		RangeSetting(Filter *f, Range<int> &r, Range<int> l = Range<int>(0, 100), QString tip = "") :
+			Setting(f, tip), range(r), limits(l) { }
+
+	protected:
+		QWidget * createWidget(QWidget *parent);
+
+		Range<int> &range;
+		Range<int> limits;
+
+		QSpinBox *spinnerL, *spinnerU;
+		RangeSlider *slider;
+};
+
+class DoubleRangeSetting : public Setting
+{
+		Q_OBJECT
+
+	public:
+		DoubleRangeSetting(Filter *f, Range<double> &r, Range<double> l = Range<double>(0, 100), QString tip = "") :
+			Setting(f, tip), range(r), limits(l) { }
+
+	protected:
+		static const int SCALE = 1000;
+
+		QWidget * createWidget(QWidget *parent);
+
+		Range<double> &range;
+		Range<double> limits;
+
+		QDoubleSpinBox *spinnerL, *spinnerU;
+		RangeSlider *slider;
+
+		Range<double> getSliderRange(Range<int> range);
+		void setSliderRange(Range<double> value);
 };
 
 class EnumSetting : public Setting
@@ -103,14 +151,14 @@ class SizeSetting : public Setting
 		Q_OBJECT
 
 	public:
-		SizeSetting(Filter *f, Size &v, int mi = 1, int ma = 100, QString tip = "") :
-			Setting(f, tip), value(v), min(mi), max(ma) { }
+		SizeSetting(Filter *f, Size &v, Range<int> l = Range<int>(1, 100), QString tip = "") :
+			Setting(f, tip), value(v), limits(l) { }
 
 	protected:
 		QWidget * createWidget(QWidget *parent);
 
 		Size &value;
-		int min, max;
+		Range<int> limits;
 
 		QSpinBox *spinnerH, *spinnerW;
 };

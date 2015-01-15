@@ -1,6 +1,7 @@
 #ifndef KMEANS_H
 #define KMEANS_H
 
+#include "range.h"
 #include "filter.h"
 
 class KMeans : public Filter
@@ -12,15 +13,19 @@ class KMeans : public Filter
 
 		QString getName() const { return "KMeans"; }
 
-	public slots:
 		void reset();
+		bool clicked(Point, QMouseEvent *);
+
 
 	protected:
 		Result * applyInternal(Image *img);
 
-		int k;
-		int low, high;
+		QList<Point> colorFilterPoints;
+		Range<int> colorFilterRange;
+
+		int k, iterations;
 		Mat labels;
+		bool iterative;
 };
 
 #endif // KMEANS_H

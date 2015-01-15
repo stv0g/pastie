@@ -7,16 +7,20 @@ using namespace cv;
 Channel::Channel(int ch) :
 	channel(ch)
 {
-	settings["Channel"] = new IntegerSetting(this, channel);
+	settings["Channel"] = new IntegerSetting(this, channel, Range<int>(0, 5));
 }
 
 Result * Channel::applyInternal(Image *img)
 {
-	Mat channels[3];
-	split(img->filtered, channels);
+	Mat &m = img->getMat();
+	Mat *channels = new Mat[m.channels()];
 
-	img->filtered = channels[(int) channel];
+	if (channel < m.channels()) {
+		split(m, channels);
+		m = channels[channel];
+	}
 
-	return NULL;
+	delete[] channels;
+
+	return new Result;
 }
-

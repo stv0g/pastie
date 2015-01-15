@@ -1,7 +1,55 @@
 #include "padfilter.h"
+#include "paddetect.h"
 
-Result * PadFilter::applyInternal(Image *)
+PadFilter::PadFilter(Filter *s) :
+	source(s),
+	areaRange(35, 6000),
+	ratioRange(1, 3)
 {
+	settings["Area Range"]  = new DoubleRangeSetting(this, areaRange,  Range<double>(1, 50000));
+	settings["Ratio Range"] = new DoubleRangeSetting(this, ratioRange, Range<double>(1, 10));
+}
 
-		return NULL;
+Result * PadFilter::applyInternal(Image *img)
+{
+	PadResult *pads = dynamic_cast<PadResult*>(img->getResult(source));
+	if (pads) {
+		PadResult *result = new PadResult;
+		for (Pad &pad : *pads) {
+			double ratio = pad.getRatio();
+			double area  = pad.getArea();
+
+			if (areaRange.contains(area) &&
+				ratioRange.contains(ratio))
+				result->push_back(pad);
+		}
+
+		for (Point p : addPoints)
+			result->append(Pad(p));
+
+		for (Point p : delPoints)
+			result->erase(result->getNearest(p));
+
+		return result;
+	}
+	else
+		qWarning() << getName() << "Missing pad list!";
+
+	return new Result;
+}
+
+void PadFilter::reset()
+{
+	addPoints.clear();
+	delPoints.clear();
+}
+
+bool PadFilter::clicked(Point p, QMouseEvent *me)
+{
+	if (me->modifiers() & Qt::AltModifier)
+		delPoints.append(p);
+	else
+		addPoints.append(p);
+
+	return true;
 }

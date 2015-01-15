@@ -2,7 +2,9 @@
 
 Result * HistEqualize::applyInternal(Image *img)
 {
-    equalizeHist(img->filtered, img->filtered);
+	Mat &m = img->getMat();
 
-	return NULL;
+	equalizeHist(m, m);
+
+	return new Result;
 }

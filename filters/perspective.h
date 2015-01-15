@@ -14,7 +14,6 @@ class Perspective : public Filter
 	protected:
 		Result * applyInternal(Image *img);
 
-		Mat map;
 		Camera *cam;
 		Pattern *pattern;
 };

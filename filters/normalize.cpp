@@ -2,7 +2,7 @@
 
 Result * Normalize::applyInternal(Image *img)
 {
-	Mat &m = img->filtered;
+	Mat &m = img->getMat();
 
 	CV_Assert(m.type() == CV_8UC3);
 
@@ -18,5 +18,5 @@ Result * Normalize::applyInternal(Image *img)
 		}
 	}
 
-	return NULL;
+	return new Result;
 }

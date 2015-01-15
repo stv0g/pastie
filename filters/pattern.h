@@ -19,10 +19,12 @@ class Pattern : public Filter
 		enum Type {
 			CHESSBOARD,
 			CIRCLES_GRID,
-			ASYMMETRIC_CIRCLES_GRID
+			ASYMMETRIC_CIRCLES_GRID,
+			QUADRILINEAR_MARKERS
 		} type;
 
-		Pattern(Size si, double sp, Type t = Type::CHESSBOARD);
+		Pattern(Size si, int sp, Type t = Type::CHESSBOARD);
+		Pattern(Size si, Size sp, Type t = Type::CHESSBOARD);
 
 		Result * applyInternal(Image *img);
 
@@ -33,8 +35,13 @@ class Pattern : public Filter
 
 	protected:
 		Size size;
+		Size spacing;
 		int flags = CALIB_CB_ADAPTIVE_THRESH + CALIB_CB_NORMALIZE_IMAGE + CALIB_CB_FAST_CHECK;
-		double spacing;
+
+		/* QUADRILINEAR Settings */
+		Range<double> areaRange;
+		Range<double> ratioRange;
+		bool showThresh;
 };
 
 class PatternResult : public Result
@@ -42,7 +49,7 @@ class PatternResult : public Result
 	public:
 		PatternResult(bool found, std::vector<Point2f> op);
 
-		void draw(Painter *p) const;
+		void drawResult(Painter *p) const;
 		QString getResult() const;
 
 		/* Getter */

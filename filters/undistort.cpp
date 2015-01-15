@@ -16,13 +16,15 @@ void Undistort::reset()
 
 Result * Undistort::applyInternal(Image *img)
 {
+	Mat &m = img->getMat();
+
 	if (cam->isCalibrated()) {
 #if 1
-        remap(img->filtered, img->filtered, map1, map2, INTER_LINEAR);
+		remap(m, m, map1, map2, INTER_LINEAR);
 #else
         Mat dest;
-		undistort(mat, dest, cam->getMatrix(), cam->getDistCoeffs());
-		mat = dest;
+		undistort(m, dest, cam->getMatrix(), cam->getDistCoeffs());
+		m = dest;
 #endif
     }
 

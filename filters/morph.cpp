@@ -24,7 +24,7 @@ Morph::Morph(int o, int t, Size s, Point a, int i) :
 	settings["Iterations"]	= new IntegerSetting(this, iterations);
 	settings["Operation"]	= new EnumSetting(this, op, mapOp);
 	settings["Shape"]		= new EnumSetting(this, shape, mapShape);
-	settings["Size"]		= new SizeSetting(this, size, 1);
+	settings["Size"]		= new SizeSetting(this, size, Range<int>(1, 32));
 
 	reset();
 }
@@ -36,7 +36,7 @@ void Morph::reset()
 
 Result * Morph::applyInternal(Image *img)
 {
-	Mat &m = img->filtered;
+	Mat &m = img->getMat();
 
 	switch (op) {
 		case MORPH_DILATE:		dilate(m, m, kernel, anchor, iterations); break;
@@ -50,5 +50,5 @@ Result * Morph::applyInternal(Image *img)
 			CV_Error(100, "Invalid morph operation");
 	}
 
-	return NULL;
+	return new Result;
 }

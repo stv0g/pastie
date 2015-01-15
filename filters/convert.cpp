@@ -19,10 +19,11 @@ Convert::Convert(int c) :
 
 Result * Convert::applyInternal(Image *img)
 {
-	Mat dest;
-    cvtColor(img->filtered, dest, code);
-    img->filtered = dest;
+	Mat &m = img->getMat();
+	Mat n = m.clone();
 
-	return NULL;
+	cvtColor(n, m, code);
+
+	return new Result;
 }
 

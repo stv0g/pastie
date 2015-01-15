@@ -38,18 +38,18 @@ Blur::Blur(enum Type t, Size ks, double sp, double clr, double si, int bdr) :
 
 Result * Blur::applyInternal(Image *img)
 {
-	Mat m = img->filtered.clone();
-	Mat &n = img->filtered;
+	Mat &n = img->getMat();
+	Mat m = n.clone();
 
 	switch (type) {
 		case BILATERAL:				bilateralFilter(m, n, -1, space, color); break;
-		case BILATERAL_ADAPTIVE:	break; // FIXME adaptiveBilateralFilter(m, n, size, color, space); break;
+		case BILATERAL_ADAPTIVE:	/*adaptiveBilateralFilter(m, n, size, space, color);*/ break;
 		case BOX:					boxFilter(m, n, -1, size, anchor, true, border); break;
 		case BOX_NORMALIZED:		blur(m, n, size, anchor, border); break;
 		case GAUSSIAN:				GaussianBlur(m, n, size, sigma, 0, border); break;
 		case MEDIAN:				medianBlur(m, n, size.width); break;
 	}
 
-	return NULL;
+	return new Result;
 }
 
