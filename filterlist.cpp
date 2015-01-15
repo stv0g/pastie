@@ -6,8 +6,8 @@ FilterList::FilterList(QObject *parent) :
 	QAbstractTableModel(parent),
 	selection(this)
 {
-	connect(&selection, &QItemSelectionModel::currentChanged, [&] (QModelIndex i, QModelIndex) {
-		emit filterSelected(at(i.row()));
+	connect(&selection, &QItemSelectionModel::currentChanged, [&] (QModelIndex current, QModelIndex) {
+		emit filterSelected(at(current.row()));
 	});
 }
 
@@ -41,6 +41,7 @@ QVariant FilterList::data(const QModelIndex &index, int role) const
 				case 0: return (filter->isEnabled()) ? Qt::Checked: Qt::Unchecked;
 				case 1: return (filter->isShown())	 ? Qt::Checked: Qt::Unchecked;
             }
+			break;
 	}
 
 	return QVariant();
@@ -56,10 +57,10 @@ bool FilterList::setData(const QModelIndex &index, const QVariant &value, int ro
 				case 0: filter->setEnabled(value == Qt::Checked);
 				case 1: filter->setShow(value == Qt::Checked); break;
 			}
+
+			emit filtersChanged();
 			break;
 	}
-
-	emit filtersChanged();
 
 	return true;
 }
@@ -107,12 +108,11 @@ void FilterList::add(Filter *filter)
 
 void FilterList::execute(Image *img)
 {
-	img->filtered = img->original.clone();
+	img->getMat().release();
 
 	try {
-		for (auto filter : *this) {
+		for (auto filter : *this)
 			img->applyFilter(filter);
-		}
 	} catch (Exception e) {
 		qCritical("%s", e.msg.c_str());
 	}
@@ -126,6 +126,14 @@ void FilterList::execute(Image *img)
 
 void FilterList::reset()
 {
+	qDebug() << "Reset filters";
 	for (Filter *filter : *this)
 		filter->reset();
+
+	emit filtersChanged();
+}
+
+Filter * FilterList::getCurrent()
+{
+	return value(selection.currentIndex().row());
 }

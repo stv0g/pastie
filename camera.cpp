@@ -21,7 +21,7 @@ void Camera::reset()
 	matrix = Mat::eye(3, 3, CV_32F);
 }
 
-bool Camera::calibrate(list<Image *> imgs, Pattern *pattern)
+bool Camera::calibrate(QList<Image *> imgs, Pattern *pattern)
 {	
 	vector<vector<Point2f>> imagePoints;
 	vector<vector<Point3f>> objectPoints;

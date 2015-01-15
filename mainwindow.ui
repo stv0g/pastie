@@ -29,27 +29,27 @@
    <enum>QTabWidget::Triangular</enum>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QSplitter" name="splitterV">
+     <widget class="QSplitter" name="splitterH">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+      <property name="minimumSize">
+       <size>
+        <width>320</width>
+        <height>0</height>
+       </size>
       </property>
-      <widget class="QSplitter" name="splitterH">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QSplitter" name="splitterV">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Vertical</enum>
        </property>
        <widget class="Viewer" name="viewer" native="true">
         <property name="sizePolicy">
@@ -68,57 +68,43 @@
          <enum>Qt::DefaultContextMenu</enum>
         </property>
        </widget>
-       <widget class="QTabWidget" name="tabWidget">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
+       <widget class="Console" name="logConsole">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>200</width>
-          <height>400</height>
+          <width>0</width>
+          <height>150</height>
          </size>
         </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>16777215</height>
-         </size>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOn</enum>
         </property>
-        <property name="tabShape">
-         <enum>QTabWidget::Rounded</enum>
+        <property name="undoRedoEnabled">
+         <bool>false</bool>
         </property>
-        <property name="currentIndex">
-         <number>0</number>
+        <property name="lineWrapMode">
+         <enum>QPlainTextEdit::WidgetWidth</enum>
         </property>
-        <widget class="TabImages" name="tabImages">
-         <attribute name="title">
-          <string>Images</string>
-         </attribute>
-        </widget>
-        <widget class="TabFilters" name="tabFilters">
-         <attribute name="title">
-          <string>Filters</string>
-         </attribute>
-        </widget>
-        <widget class="TabCamera" name="tabCamera">
-         <attribute name="title">
-          <string>Camera</string>
-         </attribute>
-        </widget>
-        <widget class="TabCalibration" name="tabCalibration">
-         <attribute name="title">
-          <string>Calibration</string>
-         </attribute>
-        </widget>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="plainText">
+         <string/>
+        </property>
+        <property name="centerOnScroll">
+         <bool>true</bool>
+        </property>
        </widget>
       </widget>
-      <widget class="Console" name="logConsole">
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -127,22 +113,47 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>0</width>
-         <height>100</height>
+         <width>200</width>
+         <height>400</height>
         </size>
        </property>
-       <property name="undoRedoEnabled">
-        <bool>false</bool>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
        </property>
-       <property name="readOnly">
-        <bool>true</bool>
+       <property name="tabShape">
+        <enum>QTabWidget::Rounded</enum>
        </property>
-       <property name="plainText">
-        <string/>
+       <property name="currentIndex">
+        <number>0</number>
        </property>
-       <property name="centerOnScroll">
-        <bool>true</bool>
-       </property>
+       <widget class="TabImages" name="tabImages">
+        <attribute name="title">
+         <string>Images</string>
+        </attribute>
+       </widget>
+       <widget class="TabFilters" name="tabFilters">
+        <attribute name="title">
+         <string>Filters</string>
+        </attribute>
+       </widget>
+       <widget class="TabCamera" name="tabCamera">
+        <attribute name="title">
+         <string>Camera</string>
+        </attribute>
+       </widget>
+       <widget class="TabCalibration" name="tabCalibration">
+        <attribute name="title">
+         <string>Calibration</string>
+        </attribute>
+       </widget>
+       <widget class="TabRobot" name="tabRobot">
+        <attribute name="title">
+         <string>Robot</string>
+        </attribute>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -477,6 +488,12 @@
    <class>TabCalibration</class>
    <extends>QWidget</extends>
    <header>tabcalibration.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TabRobot</class>
+   <extends>QWidget</extends>
+   <header>tabrobot.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

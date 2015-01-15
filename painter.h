@@ -3,16 +3,23 @@
 
 #include <QPainter>
 
+#include "cast.h"
+#include "pad.h"
+
 class Painter : public QPainter
 {
 	public:
-		Painter(QPaintDevice *device, double ratio = 1);
+		Painter(QPaintDevice *dev) :
+			QPainter(dev)
+		{ }
 
 		void drawMarker(const QPoint &center, int radius = 8);
+		void drawPad(const Pad &pad);
 
-	protected:
-		double ratio;
+		/* Proxy to adjust width */
+		void setPen(const QPen &pen);
 
+		double getRatio();
 };
 
 #endif // PAINTER_H

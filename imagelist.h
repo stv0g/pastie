@@ -27,6 +27,9 @@ class ImageList :
 
 		QItemSelectionModel selection;
 
+		QList<Image *> getSelected();
+		Image * getCurrent();
+
 	signals:
 		void newImage(Image *img);
 
@@ -37,13 +40,8 @@ class ImageList :
 		void saveFilePicker();
 		void clear();
 
-		QList<Image *> selectedImages();
-		Image * currentImage();
-		Image * prevImage();
-		Image * nextImage();
-
-	protected:
-		Image *current;
+		void prevImage();
+		void nextImage();
 };
 
 #endif // IMAGELIST_H

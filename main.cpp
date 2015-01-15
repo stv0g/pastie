@@ -23,38 +23,34 @@ int main(int argc, char *argv[])
 	foreach (const QCameraInfo &cameraInfo, cameras)
 		qDebug() << "Found Qt camera: " << cameraInfo.deviceName() << ": " << cameraInfo.description();
 
-	filters = new FilterList;
-	images = new ImageList;
 	source = new Source;
 	cam = new Camera(source);
+	filters = new FilterList;
+	images = new ImageList;
 	mwindow = new MainWindow;
 
 	QStringList imgs = QCoreApplication::arguments();
 	imgs.removeFirst();
 	imgs.removeDuplicates();
-	imgs.sort();
 	images->load(imgs);
 
 	/* Setup pipeline */
-#if 1
+	Pattern *pat = new Pattern(Size(2, 2), Size(60, 60), Pattern::QUADRILINEAR_MARKERS);
+	filters->add(pat);
+	filters->add(new Perspective(cam, pat));
+	filters->add(new Resize(Range<int>(400, 1000)));
+
 	filters->add(new Blur(Blur::GAUSSIAN, Size(3, 3)));
 	filters->add(new KMeans(4));
-	filters->add(new Convert(COLOR_BGR2HSV));
-	filters->add(new Channel(1));
-	//filters->add(new Convert(COLOR_BGR2GRAY));
-	//filters->add(new HistEqualize());
+	filters->add(new Convert(COLOR_BGR2GRAY));
 	filters->add(new Threshold(Threshold::OTSU));
-	//filters->add(new EdgeDetect(80, 3));
-	//filters->add(new Watershed());
-	filters->add(new Morph(MORPH_CLOSE, MORPH_RECT));
-	filters->add(new ShapeDetect());
-	//filters->add(new MaxChannel());
-	//filters->add(new Normalize());
-#else
-	filters->add(new Undistort(cam));
-	filters->add(new Pattern(Size(13, 9), 60));
-	filters->add(new Perspective(cam, (Pattern *) filters->last()));
-#endif
+
+	PadDetect *pads = new PadDetect();
+	PadFilter *filter = new PadFilter(pads);
+
+	filters->add(pads);
+	filters->add(filter);
+	filters->add(new PathPlanner(filter, PathPlanner::NEAREST_NEIGHBOUR));
 
 	mwindow->show();
 

@@ -42,7 +42,7 @@ void TabCalibration::doCalibration()
 
 	filters->add(pattern);
 
-	if (cam->calibrate(images->selectedImages().toStdList(), pattern))
+	if (cam->calibrate(images->getSelected(), pattern))
 		showResults();
 }
 

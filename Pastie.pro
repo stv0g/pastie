@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui opengl multimedia
+QT += core gui opengl multimedia serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -31,11 +31,20 @@ SOURCES += main.cpp\
     painter.cpp \
     filters/maxchannel.cpp \
     filters/normalize.cpp \
-    filters/shapedetect.cpp \
     filters/setting.cpp \
-    filters/result.cpp \
     filters/blur.cpp \
-    filters/watershed.cpp
+    filters/watershed.cpp \
+    filters/derivative.cpp \
+    robot.cpp \
+    tabrobot.cpp \
+    filters/pathplanner.cpp \
+    filters/paddetect.cpp \
+    pad.cpp \
+    filters/resize.cpp \
+    filters/padfilter.cpp \
+    rangeslider.cpp \
+    filters/rectify.cpp \
+    filters/rotate.cpp
 
 HEADERS += mainwindow.h \
     camera.h \
@@ -56,11 +65,22 @@ HEADERS += mainwindow.h \
     filters.h \
     filters/maxchannel.h \
     filters/normalize.h \
-    filters/shapedetect.h \
     filters/setting.h \
     filters/result.h \
     filters/blur.h \
-    filters/watershed.h
+    filters/watershed.h \
+    filters/derivative.h \
+    robot.h \
+    tabrobot.h \
+    filters/pathplanner.h \
+    filters/paddetect.h \
+    pad.h \
+    filters/resize.h \
+    qspanslider.h \
+    rangeslider.h \
+    range.h \
+    filters/rectify.h \
+    filters/rotate.h
 
 SOURCES += filters/filter.cpp \
     filters/undistort.cpp \
@@ -70,7 +90,6 @@ SOURCES += filters/filter.cpp \
     filters/morph.cpp \
     filters/convert.cpp \
     filters/pattern.cpp \
-    filters/padfilter.cpp \
     filters/edgedetect.cpp \
     filters/channel.cpp \
     filters/perspective.cpp
@@ -95,7 +114,8 @@ FORMS += mainwindow.ui \
     tabimages.ui \
     tabcamera.ui \
     tabfilters.ui \
-    tabpads.ui
+    tabpads.ui \
+    tabrobot.ui
 
 # OpenCV
 INCLUDEPATH += /usr/local/include

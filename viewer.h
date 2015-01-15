@@ -17,31 +17,33 @@ class Viewer : public QGLWidget
 	public:
 		explicit Viewer(QWidget *parent = 0);
 
-		Image *img;
-
-		QVector<Point> clicks;
-
 	protected:
-		QPoint transform(QPoint pos);
-		QPoint transformInv(QPoint pos);
-
 		void paintEvent(QPaintEvent *pe);
 		void resizeEvent(QResizeEvent *re);
+
+		void wheelEvent(QWheelEvent *we);
+		void mousePressEvent(QMouseEvent *me);
+		void mouseMoveEvent(QMouseEvent *me);
 		void mouseReleaseEvent(QMouseEvent *me);
 
+		QPoint map(const QPoint &p) const;
+		QPoint unmap(const QPoint &p) const;
+
+		void updateTransform();
+		void updateWindow(const QRect &r);
+
+		Image *img;
 		QImage qimg;
 		QRect viewport;
-
-		Size size;
-		double ratio;
-
-	signals:
-		void clicked(QPoint pos);
+		QRect window;
+		QPoint first, last;
+		QTransform transform;
 
 	public slots:
 		void showImage(Image *img);
 		void updateImage();
-		void updateViewport();
+
+		void reset();
 };
 
 #endif // VIEWER_H

@@ -13,10 +13,16 @@
 #include "filters/normalize.h"
 #include "filters/pattern.h"
 #include "filters/perspective.h"
-#include "filters/shapedetect.h"
+#include "filters/paddetect.h"
+#include "filters/padfilter.h"
 #include "filters/threshold.h"
 #include "filters/undistort.h"
 #include "filters/watershed.h"
+#include "filters/derivative.h"
+#include "filters/rectify.h"
+#include "filters/pathplanner.h"
+#include "filters/resize.h"
+#include "filters/rotate.h"
 
 #endif // FILTERS_H
 

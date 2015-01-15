@@ -18,7 +18,7 @@ class Camera
 	public:
 		Camera(Source *s);
 
-		bool calibrate(list<Image *> imgs, Pattern *pattern);
+		bool calibrate(QList<Image *> imgs, Pattern *pattern);
 
 		/* Getters */
 		const Mat & getDistCoeffs() { return distCoeffs; }

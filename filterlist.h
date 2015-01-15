@@ -26,6 +26,8 @@ class FilterList :
 		void add(Filter *filt);
 		void execute(Image *img);
 
+		Filter * getCurrent();
+
 		QItemSelectionModel selection;
 
 	public slots:

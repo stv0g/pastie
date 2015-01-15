@@ -20,109 +20,204 @@ Viewer::Viewer(QWidget *parent) :
 	img(NULL)
 { }
 
+void Viewer::reset()
+{
+	Mat &m = img->getMat();
+	updateWindow(QRect(0, 0, m.cols, m.rows));
+}
+
 void Viewer::resizeEvent(QResizeEvent *)
 {
-	updateViewport();
+	updateTransform();
 }
 
 void Viewer::paintEvent(QPaintEvent *)
 {
-	Painter p(this, 1 / ratio);
+	Painter p(this);
+	QPen pe;
 
+	p.setRenderHint(QPainter::Antialiasing);
 	p.fillRect(rect(), Qt::black);
+	p.setClipRect(viewport);
+	p.setTransform(transform);
 
-	if (!img)
-		return;
+	pe.setStyle(Qt::SolidLine);
+	pe.setWidth(2);
+	p.setPen(pe);
 
-	p.setViewport(viewport);
-	p.setWindow(qimg.rect());
+	if (img) {
+		p.drawImage(window, qimg, window);
 
-	p.drawImage(p.window(), qimg);
+		for (auto it = filters->begin(); it != filters->end(); it++) {
+			Result *result = img->getResult(*it);
+			if (result && (*it)->isShown()) {
+				p.save();
 
-	QPen pen = p.pen();
-	pen.setColor(Qt::green);
-	pen.setWidth(2 / ratio);
-	p.setPen(pen);
+				/*QTransform t;
+				for (auto it2 = it+1; it2 != filters->end(); it2++) {
+					Result *result2 = img->getResult(*it2);
+					if (result2 && (*it2)->isShown())
+						t *= result2->getTransform();
+				}
+				p.setWorldTransform(t * transform);*/
 
-	for (auto filter : *filters) {
-		Result *result = img->getResult(filter);
-
-		if (filter->isShown() && result)
-			result->draw(&p);
+				result->drawResult(&p);
+				p.restore();
+			}
+		}
 	}
+
+	if (!first.isNull() && !last.isNull()) {
+		QRect sel(unmap(first), unmap(last));
+
+		pe.setWidth(2);
+		pe.setStyle(Qt::SolidLine);
+		pe.setColor(Qt::black);
+		p.setPen(pe);
+		p.drawRect(sel.normalized());
+
+		pe.setStyle(Qt::DotLine);
+		pe.setBrush(Qt::white);
+		p.setPen(pe);
+		p.drawRect(sel.normalized());
+	}
+}
+
+void Viewer::wheelEvent(QWheelEvent * we)
+{
+	QPoint numPixels = we->pixelDelta();
+	QPoint numDegrees = we->angleDelta() / 8;
+
+	int d = 0;
+
+	if (!numPixels.isNull())
+		d = numPixels.y();
+	else if (!numDegrees.isNull())
+		d = numDegrees.y();
+
+	double ratio = (double) window.width() / window.height();
+
+	if (d > 0 || (d < 0 && window.height() + 2*d > 32)) {
+		updateWindow(window.adjusted(
+			-d * ratio, -d,
+			 d * ratio,  d
+		));
+
+		update();
+		we->accept();
+	}
+	else
+		we->ignore();
+}
+
+void Viewer::mousePressEvent(QMouseEvent *me)
+{	
+	if (viewport.contains(me->pos())) {
+		if (me->modifiers() & Qt::AltModifier)
+			first = me->pos();
+		else
+			last = me->pos();
+	}
+}
+
+void Viewer::mouseMoveEvent(QMouseEvent *me)
+{
+	if (viewport.contains(me->pos())) {
+		if (me->modifiers() & Qt::AltModifier) {
+			update();
+		}
+		else {
+			QPoint delta = (me->pos() - last) / transform.m11();
+			window.moveCenter(window.center() - delta);
+
+			updateWindow(window);
+			update();
+		}
+	}
+
+	last = me->pos();
 }
 
 void Viewer::mouseReleaseEvent(QMouseEvent *me)
 {
 	if (viewport.contains(me->pos())) {
-		QPoint pos = transformInv(me->pos());
+		if (me->modifiers() & Qt::AltModifier) {
+			if (!first.isNull() && !last.isNull())
+				updateWindow(QRect(unmap(first), unmap(last)).normalized());
+		}
+		else if (last.isNull()) {
+			QPoint pos = unmap(me->pos());
+			Filter *f = filters->getCurrent();
 
-		qDebug() << "Clicked at: " << pos.x() << "," << pos.y();
+			qDebug() << "Clicked at: " << pos << "(" << me->pos() << ")";
 
-		clicks.push_back(Point(pos.x(), pos.y()));
-		emit clicked(pos);
+			if (f) {
+				if (f->clicked(toCv(pos), me))
+					updateImage();
+			}
+		}
 	}
-}
 
-QPoint Viewer::transform(QPoint pos)
-{
-	return pos * ratio + viewport.topLeft();
-}
-
-QPoint Viewer::transformInv(QPoint pos)
-{
-	return (pos - viewport.topLeft()) / ratio;
-}
-
-void Viewer::showImage(Image *next)
-{
-	if (!next)
-		return;
-
-	if (next != img)
-		filters->reset();
-
-	img = next;
-	updateImage();
-}
-
-void Viewer::updateImage()
-{
-	if (!img)
-		return;
-
-	filters->execute(img);
-
-	qimg = toQImage(img->filtered);
-
-	if (size != img->filtered.size()) {
-		size = img->filtered.size();
-		updateViewport();
-	}
+	first = last = QPoint();
 
 	update();
 }
 
-void Viewer::updateViewport()
+void Viewer::showImage(Image *next)
 {
-	double viewRatio = (double) size.width / size.height;
+	if (next) {
+		if (next != img)
+			filters->reset();
 
-	int viewHeight = width() / viewRatio;
-	int viewWidth = width();
-
-	if (viewHeight > height()) {
-		viewWidth = height() * viewRatio;
-		viewHeight = height();
+		img = next;
+		updateImage();
 	}
+}
 
-	viewport = QRect(
-					(width() - viewWidth) / 2,
-					(height() - viewHeight) / 2,
-					viewWidth,
-					viewHeight
-			   );
+void Viewer::updateImage()
+{
+	if (img) {
+		filters->execute(img);
 
-	qDebug() << "New viewport" << viewport << " in widget " << rect() << " for frame " << toQt(size);
+		Mat &m = img->getMat();
+		qimg = toQImage(m);
 
-	ratio = (double) viewport.width() / size.width;
+		if (window.size() != toQt(m.size()))
+			updateWindow(QRect(0, 0, m.cols, m.rows));
+
+		update();
+	}
+}
+
+void Viewer::updateWindow(const QRect &win)
+{
+	window = win;
+	updateTransform();
+}
+
+void Viewer::updateTransform()
+{
+	QSizeF s = window.size();
+	s.scale(size(), Qt::KeepAspectRatio);
+
+	viewport.setRect((double) (width() - s.width()) / 2,
+					 (double) (height() - s.height()) / 2,
+					  s.width(), s.height() );
+
+	double sc = (double) viewport.width() / window.width();
+
+	transform.reset();
+	transform.translate(viewport.x(), viewport.y());
+	transform.scale(sc, sc);
+	transform.translate( -window.x(),  -window.y());
+}
+
+QPoint Viewer::map(const QPoint &p) const
+{
+	return transform.map(p);
+}
+
+QPoint Viewer::unmap(const QPoint &p) const
+{
+	return transform.inverted().map(p);
 }

@@ -71,16 +71,11 @@ void Source::play(bool run)
 
 void Source::tick()
 {
-	static bool running;
+	Mat m;
 
-	if (running)
-		return;
-
-	running = true;
-
-	if (read(last.original))
+	if (read(m)) {
+		last.setSourceMat(m);
 		emit newImage(&last);
-
-	running = false;
+	}
 }
 

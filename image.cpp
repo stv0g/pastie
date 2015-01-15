@@ -7,17 +7,16 @@ using namespace cv;
 
 Image::Image(Mat m, QString p) :
 	path(p),
-	original(m.clone()),
-	loaded(false),
+	source(m),
+	loaded(true),
 	saved(false)
 { }
 
 Image::Image(QString p) :
 	path(p),
+	loaded(false),
 	saved(false)
-{
-	load();
-}
+{ }
 
 Image::~Image()
 {
@@ -30,8 +29,8 @@ void Image::load(QString p)
 	if (p != "")
 		path = p;
 
-	original = cv::imread(path.toStdString());
-	loaded = (bool) original.data;
+	source = cv::imread(path.toStdString());
+	loaded = (bool) source.data;
 }
 
 void Image::save(QString p)
@@ -39,16 +38,33 @@ void Image::save(QString p)
 	if (p != "")
 		path = p;
 
-	saved = imwrite(path.toStdString(), original);
+	saved = imwrite(path.toStdString(), getMat());
 }
 
 void Image::applyFilter(Filter *filter)
 {
-// FIXME!
-//	if (results.contains(filter))
-//		delete results[filter];
-
 	Result *result = filter->apply(this);
 	if (result)
 		results[filter] = result;
+}
+
+Mat & Image::getMat()
+{
+	if (!filtered.data)
+		filtered = getSourceMat().clone();
+
+	return filtered;
+}
+
+const Mat & Image::getSourceMat()
+{
+	if (!loaded)
+		load();
+
+	return source;
+}
+
+void Image::setSourceMat(const Mat &m)
+{
+	source = m;
 }

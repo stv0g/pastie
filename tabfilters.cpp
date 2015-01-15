@@ -14,7 +14,7 @@ TabFilters::TabFilters(QWidget *parent) :
 	ui->tblFilters->setModel(filters);
 	ui->tblFilters->setSelectionModel(&filters->selection);
 
-	connect(ui->tblFilters->verticalHeader(), &QHeaderView::sectionCountChanged,	[&] () {
+	connect(ui->tblFilters->verticalHeader(), &QHeaderView::sectionCountChanged, [&]() {
 		ui->tblFilters->resizeColumnsToContents();
 		ui->tblFilters->resizeRowsToContents();
 	});

@@ -36,6 +36,8 @@ class MainWindow : public QMainWindow
 	protected:
 		Ui::MainWindow *ui;
 
+		void showEvent(QShowEvent *se);
+
 	signals:
 		void newImage(Image *img);
 };

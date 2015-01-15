@@ -24,12 +24,17 @@ MainWindow::MainWindow(QWidget *parent) :
 		static_cast<int>(0.8 * ui->splitterH->width()),
 		static_cast<int>(0.2 * ui->splitterH->width())
 	});
+	ui->splitterV->setSizes({
+		static_cast<int>(0.75 * ui->viewer->width()),
+		static_cast<int>(0.25 * ui->viewer->width())
+	});
 
 	/* Connect actions */
 	connect(images,					&ImageList::newImage,		ui->viewer,				&Viewer::showImage);
 	connect(source,					&Source::newImage,			ui->viewer,				&Viewer::showImage);
 	connect(filters,				&FilterList::filtersChanged,ui->viewer,				&Viewer::updateImage);
 	connect(ui->actionRedraw,		&QAction::triggered,		ui->viewer,				&Viewer::updateImage);
+	connect(ui->actionReset,		&QAction::triggered,		ui->viewer,				&Viewer::reset);
 	connect(ui->actionCalibrate,	&QAction::triggered,		ui->tabCalibration,		&TabCalibration::doCalibration);
 	connect(ui->actionSnapshot,		&QAction::triggered,		ui->tabCamera,			&TabCamera::doSnapshot);
 	connect(ui->actionAbout,		&QAction::triggered,		this,					&MainWindow::showAbout);
@@ -39,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionSave,			&QAction::triggered,		images,					&ImageList::saveFilePicker);
 	connect(ui->actionNextImage,	&QAction::triggered,		images,					&ImageList::nextImage);
 	connect(ui->actionPrevImage,	&QAction::triggered,		images,					&ImageList::prevImage);
+	connect(ui->actionReset,		&QAction::triggered,		filters,				&FilterList::reset);
 	connect(ui->actionPlay,			&QAction::triggered,		source,					&Source::play);
 	connect(ui->actionTabImages,	&QAction::triggered,		[=]() { ui->tabWidget->setCurrentWidget(ui->tabImages); });
 	connect(ui->actionTabFilters,	&QAction::triggered,		[=]() { ui->tabWidget->setCurrentWidget(ui->tabFilters); });
@@ -47,6 +53,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	updateGeometry();
 	showMaximized();
+}
+
+void MainWindow::showEvent(QShowEvent *)
+{
+	ui->viewer->showImage(images->getCurrent());
 }
 
 MainWindow::~MainWindow()

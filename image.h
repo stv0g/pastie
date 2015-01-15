@@ -15,29 +15,36 @@ class Result;
 
 class Image
 {
-public:
-	Image(Mat mat = Mat(), QString path = "");
-	Image(QString p);
-    ~Image();
+	public:
+		Image(Mat mat = Mat(), QString path = QString());
+		Image(QString p);
+		~Image();
 
-	void save(QString path = "");
-	void load(QString path = "");
+		void save(QString path = QString());
+		void load(QString path = QString());
 
-	QString path;
+		void applyFilter(Filter *filter);
 
-    Mat original;
-    Mat filtered;
+		/* Getter */
+		bool isLoaded() const { return loaded; }
+		bool isSaved() const { return saved; }
 
-	void applyFilter(Filter *filter);
+		Result * getResult(Filter *f) { return results[f]; }
+		QString getPath() { return path; }
+		Mat & getMat();
 
-	/* Getter */
-	Result * getResult(Filter *f) { return results[f]; }
+		const Mat & getSourceMat();
+		void setSourceMat(const Mat &m);
 
-protected:
-	QMap<Filter*, Result*> results;
+	protected:
+		QMap<Filter*, Result*> results;
 
-	bool loaded;
-	bool saved;
+		QString path;
+		Mat source;
+		Mat filtered;
+
+		bool loaded;
+		bool saved;
 };
 
 #endif // IMAGE_H
