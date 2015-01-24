@@ -14,6 +14,8 @@ class Perspective : public Filter
 	protected:
 		Result * applyInternal(Image *img);
 
+		double alpha;
+
 		Camera *cam;
 		Pattern *pattern;
 };

@@ -27,7 +27,7 @@ Pattern::Pattern(Size si, Size sp, Type t) :
 	mapType[QUADRILINEAR_MARKERS] = "Quadrilinear Markers";
 
 	settings["Size"]	= new SizeSetting(this, size, Range<int>(1, 16));
-	settings["Spacing"] = new SizeSetting(this, spacing, Range<int>(0, 300));
+	settings["Spacing"] = new SizeSetting(this, spacing, Range<int>(0, 5000));
 	settings["Type"]	= new EnumSetting(this, (int&) type, mapType);
 
 	if (type == QUADRILINEAR_MARKERS) {
@@ -162,10 +162,9 @@ std::vector<Point3f> Pattern::getPoints() const
 std::vector<int> Pattern::getCornerIndizes() const
 {
 	return {
-		0,
-		size.width - 1,
-		size.width * size.height - size.width,
-		size.width * size.height - 1
+		0, size.width - 1,
+		size.area() - size.width,
+		size.area() - 1
 	};
 }
 

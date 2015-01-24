@@ -6,9 +6,12 @@
 #include "perspective.h"
 
 Perspective::Perspective(Camera *c, Pattern *p) :
+	alpha(1),
 	cam(c),
 	pattern(p)
-{ }
+{
+	settings["Scale"] = new DoubleSetting(this, alpha, Range<double>(0.5, 2));
+}
 
 Result * Perspective::applyInternal(Image *img)
 {
@@ -17,25 +20,24 @@ Result * Perspective::applyInternal(Image *img)
 
 	if (presult && presult->isFound()) {
 		Mat map;
-		std::vector<Point2f> src, dest, tmp;
+		std::vector<Point2f> src, dest;
 		std::vector<Point2f> srcPoints  = presult->getPoints();
 		std::vector<Point3f> destPoints = pattern->getPoints();
 
 		for (int i : pattern->getCornerIndizes()) {
 			src.push_back(srcPoints[i]);
-			tmp.push_back(Point2f(destPoints[i].x, destPoints[i].y));
+			dest.push_back(Point2f(destPoints[i].x, destPoints[i].y));
 		}
 
-		int destWidth = 0.9 * m.cols;
-		int destHeight = tmp[2].y * (destWidth / tmp[1].x);
+		double scale = alpha * norm(src[1] - src[0]) / norm(dest[1] - dest[0]);
 
-		dest.push_back(Point2f((m.cols - destWidth) / 2, (m.rows - destHeight) / 2));
-		dest.push_back(dest[0] + Point2f(destWidth, 0));
-		dest.push_back(dest[0] + Point2f(0,		 destHeight));
-		dest.push_back(dest[0] + Point2f(destWidth, destHeight));
+		for (Point2f &p : dest)
+			p *= scale;
+
+		Size newSize(dest[3].x, dest[3].y);
 
 		map = getPerspectiveTransform(src, dest);
-		warpPerspective(m, m, map, m.size());
+		warpPerspective(m, m, map, newSize);
 
 		return new Result(toQTransform(map));
 	}
