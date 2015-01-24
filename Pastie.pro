@@ -26,7 +26,6 @@ SOURCES += main.cpp\
     tabimages.cpp \
     tabcamera.cpp \
     tabfilters.cpp \
-    tabpads.cpp \
     console.cpp \
     painter.cpp \
     filters/maxchannel.cpp \
@@ -58,7 +57,6 @@ HEADERS += mainwindow.h \
     tabimages.h \
     tabcamera.h \
     tabfilters.h \
-    tabpads.h \
     console.h \
     cast.h \
     painter.h \
@@ -114,7 +112,6 @@ FORMS += mainwindow.ui \
     tabimages.ui \
     tabcamera.ui \
     tabfilters.ui \
-    tabpads.ui \
     tabrobot.ui
 
 # OpenCV

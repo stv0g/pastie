@@ -10,7 +10,6 @@
 #include "tabcamera.h"
 #include "tabfilters.h"
 #include "tabimages.h"
-#include "tabpads.h"
 
 #include "filterlist.h"
 #include "imagelist.h"
