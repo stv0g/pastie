@@ -29,6 +29,8 @@
         <file>resources/octoprint.png</file>
         <file>resources/go-bottom.png</file>
         <file>resources/go-top.png</file>
+        <file>resources/process-stop.png</file>
+        <file>resources/start-here.png</file>
     </qresource>
     <qresource prefix="/math">
         <file>resources/matbr_left.png</file>

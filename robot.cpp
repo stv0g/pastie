@@ -16,7 +16,7 @@ GCode & GCode::arg(char param, int v)
 
 GCode & GCode::arg(char param, double v)
 {
-	arg
+
 }
 
 GCode::operator QByteArray()
@@ -62,7 +62,7 @@ void Robot::stop()
 void Robot::moveZ(double z)
 {
 	queue << GCode("G0")
-				.arg('Z', pos.z);
+				.arg('Z', z);
 }
 
 void Robot::moveXY(Point2f pos)
