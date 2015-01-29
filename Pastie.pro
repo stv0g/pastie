@@ -124,7 +124,8 @@ LIBS +=	-lopencv_core \
 	-lopencv_imgcodecs \
 	-lopencv_videoio \
 	-lopencv_calib3d \
-	-lopencv_features2d
+        -lopencv_features2d \
+        -framework CoreFoundation
 
 RESOURCES += \
     images.qrc \
