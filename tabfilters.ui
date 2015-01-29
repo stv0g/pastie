@@ -35,6 +35,9 @@
    </item>
    <item>
     <widget class="QWidget" name="wdgActions" native="true">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <property name="leftMargin">
        <number>0</number>
@@ -48,9 +51,6 @@
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item row="0" column="0">
-       <widget class="QComboBox" name="cmbFilter"/>
-      </item>
       <item row="0" column="1">
        <widget class="QPushButton" name="btnAdd">
         <property name="text">
@@ -71,6 +71,15 @@
          <iconset resource="images.qrc">
           <normaloff>:/icons/resources/list-remove.png</normaloff>:/icons/resources/list-remove.png</iconset>
         </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QComboBox" name="cmbFilter">
+        <item>
+         <property name="text">
+          <string>Threshold</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
