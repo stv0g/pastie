@@ -9,6 +9,8 @@ GCode::GCode(QByteArray c) :
 	cmd(c)
 { }
 
+
+
 GCode & GCode::arg(char param, int v)
 {
 	QByteArray arg;
@@ -17,6 +19,8 @@ GCode & GCode::arg(char param, int v)
 	arg.push_back(QByteArray::number(v));
 
 	args.push_back(arg);
+
+	return *this;
 }
 
 GCode & GCode::arg(char param, double v)
@@ -27,6 +31,8 @@ GCode & GCode::arg(char param, double v)
 	arg += QByteArray::number(v);
 
 	args += arg;
+
+	return *this;
 }
 
 GCode::operator QByteArray()
@@ -54,22 +60,22 @@ GCode::operator QByteArray()
 GCode GCode::moveZ(double z)
 {
 	return GCode("G0")
-				.arg('Z', z);
+			.arg('Z', z);
 }
 
 GCode GCode::moveXY(Point2f pos)
 {
 	return GCode("G0")
-				.arg('X', pos.x)
-				.arg('Y', pos.y);
+			.arg('X', pos.x)
+			.arg('Y', pos.y);
 }
 
 GCode GCode::move(Point3f pos)
 {
 	return GCode("G0")
-				.arg('X', pos.x)
-				.arg('Y', pos.y)
-				.arg('Z', pos.z);
+			.arg('X', pos.x)
+			.arg('Y', pos.y)
+			.arg('Z', pos.z);
 }
 
 GCode GCode::home()
@@ -89,7 +95,7 @@ GCode GCode::stop()
 
 GCode GCode::comment(QString c)
 {
-//	return GCode(";" + c);
+	return GCode(QString(";" + c).toLatin1());
 }
 
 /****************** Robot *******************/
@@ -191,7 +197,7 @@ void Robot::processPath()
 				p.y > bedSize.height ||
 				p.x < 0 ||
 				p.y < 0
-			) {
+				) {
 				qCritical() << "Pad outside of bed: " << toQt(p);
 				return;
 			}
@@ -218,14 +224,28 @@ void Robot::processPath()
 
 Point2f Robot::map(Point2f p)
 {
-	//Point2f a = affine * Point3f(p.x, p.y, 1);
+	Mat src(3, 1, CV_32F);
 
-	//return Point3f(a.x, a.y, zOffset);
+	src.at<float>(0) = p.x;
+	src.at<float>(1) = p.y;
+	src.at<float>(2) = 1.0;
+
+	Mat dst = affine * src;
+
+	return Point2f(dst.at<float>(0), dst.at<float>(1));
 }
 
 Point2f Robot::unmap(Point2f p)
 {
-	//return affine.inv() * Point2f(p.x, p.y);
+	Mat src(3, 1, CV_32F);
+
+	src.at<float>(0) = p.x;
+	src.at<float>(1) = p.y;
+	src.at<float>(2) = 1.0;
+
+	Mat dst = affine.inv() * src;
+
+	return Point2f(dst.at<float>(0), dst.at<float>(1));
 }
 
 void Robot::updateTransformation()
@@ -244,8 +264,8 @@ void Robot::updateTransformation()
 	dst = pat->getPoints();
 
 	qDebug() << "Mapping: " << toQt(src[0]) << "=>" << toQt(dst[0]) << ", "
-							<< toQt(src[1]) << "=>" << toQt(dst[1]) << ", "
-							<< toQt(src[2]) << "=>" << toQt(dst[2]);
+																	<< toQt(src[1]) << "=>" << toQt(dst[1]) << ", "
+																											<< toQt(src[2]) << "=>" << toQt(dst[2]);
 
 	affine = getAffineTransform(src, dst);
 

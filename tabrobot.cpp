@@ -26,9 +26,9 @@ TabRobot::TabRobot(QWidget *parent) :
 	connect(ui->btnHome,		&QPushButton::clicked,			robot,	&Robot::home);
 	connect(ui->btnSave,		&QPushButton::clicked,			this,	&TabRobot::saveFilePicker);
 	connect(ui->btnConnect,		&QPushButton::clicked,			this,	&TabRobot::connectOctoPrint);
-	connect(ui->inpAccelXY,		SIGNAL(valueChanged()),			this,	SLOT(setAccel()));
-	connect(ui->inpAccelZ,		SIGNAL(valueChanged()),			this,	SLOT(setAccel()));
-	connect(ui->inpBedSizeX,	SIGNAL(valueChanged()),			this,	SLOT(setBedSize()));
+	connect(ui->inpAccelXY,		SIGNAL(valueChanged(double)),	this,	SLOT(setAccel()));
+	connect(ui->inpAccelZ,		SIGNAL(valueChanged(double)),	this,	SLOT(setAccel()));
+	connect(ui->inpBedSizeX,	SIGNAL(valueChanged(double)),	this,	SLOT(setBedSize()));
 	connect(ui->inpSwingZ,		SIGNAL(valueChanged(double)),	robot,	SLOT(setSwingZ(double)));
 	connect(ui->inpOffsetZ,		SIGNAL(valueChanged(double)),	robot,	SLOT(setOffsetZ(double)));
 	connect(ui->cmbBedShape,	SIGNAL(currentIndexChanged(int)),robot,	SLOT(setBedShape(int)));
@@ -45,7 +45,7 @@ TabRobot::TabRobot(QWidget *parent) :
 			s->setRange(-15, +15);
 			l->addWidget(s, j+1, i+2);
 
-			connect(s, SIGNAL(valueChanged()), this, SLOT(updateCalibPoints));
+			connect(s, SIGNAL(valueChanged(double)), this, SLOT(updateCalibPoints));
 
 			calibWdgs[i][j] = s;
 		}

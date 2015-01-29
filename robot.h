@@ -18,6 +18,7 @@ class GCode
 
 		GCode & arg(char param, int v);
 		GCode & arg(char param, double v);
+		GCode & arg(QByteArray arg);
 
 		/* Factories */
 		static GCode home();

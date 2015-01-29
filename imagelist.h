@@ -5,7 +5,7 @@
 #include <QAbstractTableModel>
 #include <QItemSelectionModel>
 
-#include "image.h"
+class Image;
 
 class ImageList :
 		public QAbstractTableModel,
