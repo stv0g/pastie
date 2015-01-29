@@ -40,9 +40,9 @@ Result * Threshold::applyInternal(Image *img)
 	}
 
 	if (type == ADAPTIVE_GAUSS)
-			adaptiveThreshold(m, m, 0xff, ADAPTIVE_THRESH_GAUSSIAN_C, method, size, c);
+			adaptiveThreshold(m, m, 0xff, ADAPTIVE_THRESH_GAUSSIAN_C, threshMethod, size, c);
 	else if (type == ADAPTIVE_MEAN)
-			adaptiveThreshold(m, m, 0xff, ADAPTIVE_THRESH_MEAN_C, method, size, c);
+			adaptiveThreshold(m, m, 0xff, ADAPTIVE_THRESH_MEAN_C, threshMethod, size, c);
 	else {
 		int mode;
 		switch (type) {
@@ -51,7 +51,7 @@ Result * Threshold::applyInternal(Image *img)
 			default:		mode = 0;
 		}
 
-		double ret = threshold(m, m, value, 0xff, mode | method);
+		double ret = threshold(m, m, value, 0xff, mode | threshMethod);
 		return new DoubleResult("tresh", ret);
 	}
 
