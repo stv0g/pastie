@@ -2,6 +2,8 @@
 #define TABIMAGES_H
 
 #include <QWidget>
+#include <QDragEnterEvent>
+#include <QDropEvent>
 
 #include "imagelist.h"
 
@@ -16,6 +18,10 @@ class TabImages : public QWidget
 	public:
 		explicit TabImages(QWidget *parent = 0);
 		~TabImages();
+
+	protected:
+		void dropEvent(QDropEvent *de);
+		void dragEnterEvent(QDragEnterEvent *dee);
 
 	private:
 		Ui::TabImages *ui;
