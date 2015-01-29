@@ -63,7 +63,13 @@ Result * PadDetect::applyInternal(Image *img)
 			case PadDetect::AREA: {
 				Pad pad	= minAreaRect(contour);
 
-				double areaContour	= contourArea(contour);
+				Mat mask = Mat::zeros(m.size(), m.type());
+				std::vector<std::vector<Point>> ctrs = { contour };
+
+				fillPoly(mask, ctrs, Scalar(1, 1, 1));
+				mask = mask.mul(m);
+
+				double areaContour	= countNonZero(mask);
 				double areaRect		= pad.getArea();
 
 				if (areaContour / areaRect > areaRatio)
