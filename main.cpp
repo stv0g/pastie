@@ -40,17 +40,17 @@ int main(int argc, char *argv[])
 	PadFilter *filter = new PadFilter(pads);
 	PathPlanner *planner = new PathPlanner(filter, PathPlanner::REPETETIVE_NEAREST_NEIGHBOUR);
 
-	filters->add(pattern);
-	filters->add(new Perspective(cam, pattern));
-	filters->add(new Resize(Range<int>(400, 1000)));
-	filters->add(new Blur(Blur::GAUSSIAN, Size(3, 3)));
-	filters->add(new KMeans(4));
-	filters->add(new Convert(COLOR_BGR2GRAY));
-	filters->add(new Threshold(Threshold::OTSU));
-	filters->add(new Morph(MORPH_CLOSE, MORPH_RECT));
-	filters->add(pads);
-	filters->add(filter);
-	filters->add(planner);
+	filters->append(pattern);
+	filters->append(new Perspective(cam, pattern));
+	filters->append(new Resize(Range<int>(400, 1000)));
+	filters->append(new Blur(Blur::GAUSSIAN, Size(3, 3)));
+	filters->append(new KMeans(4));
+	filters->append(new Convert(COLOR_BGR2GRAY));
+	filters->append(new Threshold(Threshold::OTSU));
+	filters->append(new Morph(MORPH_CLOSE, MORPH_RECT));
+	filters->append(pads);
+	filters->append(filter);
+	filters->append(planner);
 
 	robot = new Robot(pattern, planner);
 	mwindow = new MainWindow;

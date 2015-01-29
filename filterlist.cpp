@@ -95,12 +95,26 @@ Qt::ItemFlags FilterList::flags(const QModelIndex &index) const
 	return flags;
 }
 
-void FilterList::add(Filter *filter)
+void FilterList::append(Filter *filter)
 {
 	beginInsertRows(QModelIndex(), size(), size());
-	push_back(filter);
+	QList<Filter*>::append(filter);
 	endInsertRows();
 
+	add(filter);
+}
+
+void FilterList::prepend(Filter *filter)
+{
+	beginInsertRows(QModelIndex(), size(), size());
+	QList<Filter*>::prepend(filter);
+	endInsertRows();
+
+	add(filter);
+}
+
+void FilterList::add(Filter *filter)
+{
 	connect(filter, SIGNAL(filterChanged(Filter *)), this, SIGNAL(filterChanged(Filter *)));
 	connect(filter, SIGNAL(filterApplied(Filter*)),  this, SLOT(update(Filter *)));
 

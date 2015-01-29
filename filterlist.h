@@ -23,7 +23,8 @@ class FilterList :
 		Qt::ItemFlags flags(const QModelIndex & index) const;
 		bool setData(const QModelIndex &index, const QVariant &value, int role);
 
-		void add(Filter *filter);
+		void prepend(Filter *filter);
+		void append(Filter *filter);
 
 		Filter * getCurrent();
 
@@ -38,6 +39,9 @@ class FilterList :
 		void filterSelected(Filter *filter);
 		void filterAdded(Filter *filter);
 		void filterRemoved(Filter *filter);
+
+	protected:
+		void add(Filter *filter);
 };
 
 #endif // FILTERLIST_H

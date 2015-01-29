@@ -1,6 +1,7 @@
 #include <opencv2/core.hpp>
 
 #include "filters/pattern.h"
+#include "filters/undistort.h"
 #include "mainwindow.h"
 #include "imagelist.h"
 #include "tabcalibration.h"
@@ -39,11 +40,17 @@ void TabCalibration::doCalibration()
 
 	Size size = Size(ui->spinBoardSizeX->value(), ui->spinBoardSizeY->value());
 	Pattern *pattern = new Pattern(size, spacing, Pattern::Type(index));
+	Undistort *undistort = new Undistort(cam);
 
-	filters->add(pattern);
-
-	if (cam->calibrate(images->getSelected(), pattern))
+	if (cam->calibrate(images->getSelected(), pattern)) {
+		filters->prepend(pattern);
+		filters->prepend(undistort);
 		showResults();
+	}
+	else {
+		delete pattern;
+		delete undistort;
+	}
 }
 
 void TabCalibration::resetCalibration()
