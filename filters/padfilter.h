@@ -10,7 +10,7 @@ class PadFilter : public Filter
 
 		QString getName() const { return "PadFilter"; }
 
-		bool clicked(Point p, QMouseEvent *me);
+		void clicked(Point p, QMouseEvent *me);
 		void reset();
 
 	protected:
@@ -20,7 +20,7 @@ class PadFilter : public Filter
 
 		Range<double> areaRange, ratioRange;
 
-		QList<Point> addPoints, delPoints;
+		QList<Point2f> addPoints, delPoints;
 };
 
 #endif // PADFILTER_H

@@ -103,13 +103,18 @@ QString PadResult::getResult() const
 	return QString("count = %1").arg(size());
 }
 
-QList<Pad>::iterator PadResult::getNearest(const Point &p)
+PadResult::iterator PadResult::getNearest(const Pad &p)
 {
-	float minDist = FLT_MAX;
-	QList<Pad>::iterator nearest = end();
+	return getNearest(p.center);
+}
 
-	for (auto it = begin(); it != end(); it++) {
-		float dist = norm(it->center - Point2f(p));
+PadResult::iterator PadResult::getNearest(const Point2f &p)
+{
+	double minDist = FLT_MAX;
+	iterator nearest = end();
+
+	for (iterator it = begin(); it != end(); it++) {
+		double dist = it->getDistance(p);
 		if (dist < minDist) {
 			nearest = it;
 			minDist = dist;

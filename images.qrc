@@ -31,6 +31,8 @@
         <file>resources/go-top.png</file>
         <file>resources/process-stop.png</file>
         <file>resources/start-here.png</file>
+        <file>resources/bed_circ.png</file>
+        <file>resources/bed_rect.png</file>
     </qresource>
     <qresource prefix="/math">
         <file>resources/matbr_left.png</file>

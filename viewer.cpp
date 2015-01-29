@@ -17,6 +17,7 @@ extern FilterList *filters;
 
 Viewer::Viewer(QWidget *parent) :
 	QGLWidget(parent),
+	mouseMode(MOUSE_NONE),
 	img(NULL)
 { }
 
@@ -36,10 +37,10 @@ void Viewer::paintEvent(QPaintEvent *)
 	Painter p(this);
 	QPen pe;
 
-	p.setRenderHint(QPainter::Antialiasing);
 	p.fillRect(rect(), Qt::black);
 	p.setClipRect(viewport);
 	p.setTransform(transform);
+	p.setRatio(1 / transform.m11());
 
 	pe.setStyle(Qt::SolidLine);
 	pe.setWidth(2);
@@ -48,26 +49,10 @@ void Viewer::paintEvent(QPaintEvent *)
 	if (img) {
 		p.drawImage(window, qimg, window);
 
-		for (auto it = filters->begin(); it != filters->end(); it++) {
-			Result *result = img->getResult(*it);
-			if (result && (*it)->isShown()) {
-				p.save();
-
-				/*QTransform t;
-				for (auto it2 = it+1; it2 != filters->end(); it2++) {
-					Result *result2 = img->getResult(*it2);
-					if (result2 && (*it2)->isShown())
-						t *= result2->getTransform();
-				}
-				p.setWorldTransform(t * transform);*/
-
-				result->drawResult(&p);
-				p.restore();
-			}
-		}
+		p.drawOverlay(img);
 	}
 
-	if (!first.isNull() && !last.isNull()) {
+	if (mouseMode == MOUSE_ZOOMING) {
 		QRect sel(unmap(first), unmap(last));
 
 		pe.setWidth(2);
@@ -85,6 +70,11 @@ void Viewer::paintEvent(QPaintEvent *)
 
 void Viewer::wheelEvent(QWheelEvent * we)
 {
+	if (mouseMode != MOUSE_NONE) {
+		we->ignore();
+		return;
+	}
+
 	QPoint numPixels = we->pixelDelta();
 	QPoint numDegrees = we->angleDelta() / 8;
 
@@ -113,80 +103,70 @@ void Viewer::wheelEvent(QWheelEvent * we)
 void Viewer::mousePressEvent(QMouseEvent *me)
 {	
 	if (viewport.contains(me->pos())) {
+		first = me->pos();
+		last = me->pos();
+
 		if (me->modifiers() & Qt::AltModifier)
-			first = me->pos();
+			mouseMode = MOUSE_ZOOMING;
 		else
-			last = me->pos();
+			mouseMode = MOUSE_DRAGGING;
 	}
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *me)
 {
 	if (viewport.contains(me->pos())) {
-		if (me->modifiers() & Qt::AltModifier) {
-			update();
-		}
-		else {
+		if (mouseMode == MOUSE_ZOOMING)
+		{ } /* draw zoom rectangle */
+		else if (mouseMode == MOUSE_DRAGGING) {
 			QPoint delta = (me->pos() - last) / transform.m11();
 			window.moveCenter(window.center() - delta);
-
 			updateWindow(window);
-			update();
 		}
+
+		last = me->pos();
 	}
 
-	last = me->pos();
+	update();
 }
 
 void Viewer::mouseReleaseEvent(QMouseEvent *me)
 {
 	if (viewport.contains(me->pos())) {
-		if (me->modifiers() & Qt::AltModifier) {
-			if (!first.isNull() && !last.isNull())
+		if (mouseMode == MOUSE_ZOOMING) {
+			if (!first.isNull() && !last.isNull()) {
 				updateWindow(QRect(unmap(first), unmap(last)).normalized());
+
+				first = QPoint();
+				last = QPoint();
+			}
 		}
-		else if (last.isNull()) {
+		else if (mouseMode == MOUSE_DRAGGING) {
 			QPoint pos = unmap(me->pos());
 			Filter *f = filters->getCurrent();
 
-			qDebug() << "Clicked at: " << pos << "(" << me->pos() << ")";
-
 			if (f) {
-				if (f->clicked(toCv(pos), me))
-					updateImage();
+				qDebug() << "Clicked at: " << pos << "(" << me->pos() << ") << for filer " << f->getName();
+				f->clicked(toCv(pos), me);
 			}
 		}
-	}
 
-	first = last = QPoint();
+		mouseMode = MOUSE_NONE;
+		first = last = QPoint();
+	}
 
 	update();
 }
 
 void Viewer::showImage(Image *next)
 {
-	if (next) {
-		if (next != img)
-			filters->reset();
+	img = next;
+	qimg = img->getQImage();
 
-		img = next;
-		updateImage();
-	}
-}
+	if (window.size() != qimg.size())
+		updateWindow(QRect(QPoint(), qimg.size()));
 
-void Viewer::updateImage()
-{
-	if (img) {
-		filters->execute(img);
-
-		Mat &m = img->getMat();
-		qimg = toQImage(m);
-
-		if (window.size() != toQt(m.size()))
-			updateWindow(QRect(0, 0, m.cols, m.rows));
-
-		update();
-	}
+	update();
 }
 
 void Viewer::updateWindow(const QRect &win)

@@ -1,7 +1,7 @@
 #ifndef PADDETECT_H
 #define PADDETECT_H
 
-#include <vector>
+#include <QLinkedList>
 
 #include "pad.h"
 #include "filter.h"
@@ -28,14 +28,16 @@ class PadDetect : public Filter
 		enum Mode mode;
 };
 
-class PadResult : public Result, public QList<Pad>
+class PadResult : public Result, public QLinkedList<Pad>
 {
 	public:
 		void drawResult(Painter *p) const;
 
 		QString getResult() const;
 
-		QList<Pad>::iterator getNearest(const Point &p);
+		iterator getNearest(const Point2f &p);
+		iterator getNearest(const Pad &p);
+
 };
 
 #endif // PADDETECT_H

@@ -41,10 +41,12 @@ class Filter : public QObject
 
 	public slots:
 		virtual void reset() { }
-		virtual bool clicked(Point, QMouseEvent * = 0) { return false; }
+		virtual void clicked(Point, QMouseEvent *) { }
+		virtual void settingChanged(Setting *);
 
 	signals:
-		void filterChanged();
+		void filterChanged(Filter *);
+		void filterApplied(Filter *);
 
 	protected:
 		bool enabled = true;

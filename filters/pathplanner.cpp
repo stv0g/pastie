@@ -9,35 +9,78 @@ PathPlanner::PathPlanner(Filter *s, enum Algorithm a) :
 	algoMap[NEAREST_NEIGHBOUR] = "Nearest Neighbour";
 	algoMap[REPETETIVE_NEAREST_NEIGHBOUR] = "Repetitive Nearest Neighbour";
 
-	//settings["Algorithm"] = new EnumSetting(this, (int &) algo, algoMap);
+	settings["Algorithm"] = new EnumSetting(this, (int &) algo, algoMap);
 }
 
 Result * PathPlanner::applyInternal(Image *img)
 {
-	PadResult *list = dynamic_cast<PadResult*>(img->getResult(source));
-	if (list) {
-		PathResult *path = new PathResult;
-		PadResult vertices = *list; /* create a copy */
+	PathResult *path = NULL;
+	PadResult *padResult = dynamic_cast<PadResult*>(img->getResult(source));
 
-		if (vertices.size() < 1 || vertices.size() > 1000) {
-			qWarning() << "Found too much/less pads (" << vertices.size() << ")! Skipping PathPlanner";
+	if (padResult) {
+		if (padResult->size() < 1 || padResult->size() > 1000) {
+			qWarning() << "Found too much/less pads (" << padResult->size() << ")! Skipping PathPlanner";
 			return path;
 		}
 
 		switch (algo) {
-			case NEAREST_NEIGHBOUR:
-				path->append(vertices.takeFirst());
+			case NEAREST_NEIGHBOUR: {
+				path = new PathResult;
+				PadResult pads = *padResult; /* create a copy */
+				PadResult::iterator start = pads.begin(); /* fixed */
+				Pad last = *start;
 
-				while (!vertices.isEmpty()) {
-					auto nearest = vertices.getNearest(path->last().center);
+				path->append(*start);
+				pads.erase(start);
+
+				while (!pads.isEmpty()) {
+					PadResult::iterator nearest = pads.getNearest(last);
 					path->append(*nearest);
-					vertices.erase(nearest);
-				}
-				break;
+					pads.erase(nearest);
 
-			case REPETETIVE_NEAREST_NEIGHBOUR:
-				// FIXME: implement
-				break;
+					last = *nearest;
+				}
+			} break;
+
+			case REPETETIVE_NEAREST_NEIGHBOUR: {
+				double minLength = FLT_MAX;
+
+				for (int i = 0; i < padResult->size(); i++) {
+					double currentLength = 0;
+					PathResult *currentPath = new PathResult;
+					PadResult pads = *padResult;
+					PadResult::iterator start = pads.begin() + i;
+					Pad last = *start;
+
+					currentPath->append(*start);
+					pads.erase(start);
+
+					while (!pads.isEmpty()) {
+						PadResult::iterator nearest = pads.getNearest(last);
+
+						CV_Assert(nearest != pads.end());
+
+						currentLength += last.getDistance(*nearest);
+						if (currentLength > minLength)
+							break;
+
+						currentPath->append(*nearest);
+						pads.erase(nearest);
+
+						last = *nearest;
+					}
+
+					if (currentLength > minLength)
+						delete currentPath;
+					else {
+						if (path)
+							delete path;
+
+						minLength = currentLength;
+						path = currentPath;
+					}	
+				}
+			} break;
 		}
 
 		return path;
@@ -48,39 +91,25 @@ Result * PathPlanner::applyInternal(Image *img)
 	return new Result;
 }
 
-#if 0
-Mat PathPlanner::calcDistanceMat(QList<Point2f> vertices)
-{
-	int size = vertices.size();
-	Mat distance = Mat::zeros(size, size, CV_32F);
-
-	for (int i = 0; i < size; i++) {
-		for (int j = i+1; j < size; j++) {
-			distance.at<float>(i, j) = Pad::distance(pads[i], pads[j]);
-		}
-	}
-
-	return distance;
-}
-#endif
-
 void PathResult::drawResult(Painter *p) const
 {
-	if (size()) {
+	if (size() >= 2) {
 		QPen pe = p->pen();
 		QBrush br(Qt::SolidPattern);
 
 		pe.setWidth(2);
 
-		for (int i = 1; i < size(); i++) {
+		const_iterator prev = begin();
+		const_iterator curr = begin() + 1;
+		for (int i = 0; curr != end(); i++, curr++, prev++) {
 			QColor c = QColor::fromHsl(360.0 / size() * i, 255, 128);
 
 			pe.setColor(c);
 			br.setColor(c);
 			p->setPen(pe);
 			p->setBrush(br);
-			p->drawLine(toQt(at(i-1)), toQt(at(i)));
-			p->drawEllipse(toQt(at(i)), 1, 1);
+			p->drawLine(toQt(*prev), toQt(*curr));
+			p->drawEllipse(toQt(*curr), 1, 1);
 		}
 
 		p->drawMarker(toQt((Point2i) (Point2f) first()));
@@ -88,11 +117,17 @@ void PathResult::drawResult(Painter *p) const
 	}
 }
 
-float PathResult::getLength() const
+double PathResult::getLength() const
 {
-	float length = 0;
-	for (int i = 1; i < size(); i++)
-		length += norm(at(i-1).center - at(i).center);
+	double length = 0;
+
+	if (size() >= 2) {
+		const_iterator curr = begin() + 1;
+		const_iterator prev = begin();
+
+		for (; curr != end(); prev++, curr++)
+			length += prev->getDistance(*curr);
+	}
 
 	return length;
 }

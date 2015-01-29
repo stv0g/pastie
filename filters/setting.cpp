@@ -6,11 +6,13 @@
 #include "viewer.h"
 #include "filter.h"
 
-Setting::Setting(Filter *f, QString tip)
-	: toolTip(tip)
+Setting::Setting(Filter *f, QString tip) :
+	filter(f),
+	toolTip(tip)
 {
-	connect(this, SIGNAL(valueChanged()), f, SIGNAL(filterChanged()));
-	connect(this, SIGNAL(valueChanged()), f, SLOT(reset()));
+	connect(this, &Setting::valueChanged, [&]() {
+		filter->settingChanged(this);
+	});
 }
 
 QWidget * Setting::getWidget(QWidget *parent)

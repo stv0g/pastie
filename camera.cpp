@@ -32,9 +32,10 @@ bool Camera::calibrate(QList<Image *> imgs, Pattern *pattern)
 		return false;
 	}
 
-	for (auto img : imgs) {
-		img->applyFilter(pattern);
-		PatternResult *result = (PatternResult *) img->getResult(pattern);
+	for (Image *img : imgs) {
+		PatternResult *result = (PatternResult*) pattern->apply(img);
+
+		img->results[pattern] = result;
 
 		if (result->isFound())
 			imagePoints.push_back(result->getPoints());

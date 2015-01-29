@@ -30,15 +30,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	});
 
 	/* Connect actions */
-	connect(images,					&ImageList::newImage,		ui->viewer,				&Viewer::showImage);
-	connect(source,					&Source::newImage,			ui->viewer,				&Viewer::showImage);
-	connect(filters,				&FilterList::filtersChanged,ui->viewer,				&Viewer::updateImage);
-	connect(ui->actionRedraw,		&QAction::triggered,		ui->viewer,				&Viewer::updateImage);
+	connect(images,					&ImageList::newImage,		this,					&MainWindow::showImage);
+	connect(source,					&Source::newFrame,			this,					&MainWindow::showFrame);
+	connect(filters,				&FilterList::filterChanged, this,					&MainWindow::render);
+	connect(ui->actionRedraw,		&QAction::triggered,		this,					&MainWindow::render);
+	connect(ui->actionAbout,		&QAction::triggered,		this,					&MainWindow::showAbout);
+	connect(ui->actionExit,			&QAction::triggered,		this,					&MainWindow::close);
 	connect(ui->actionReset,		&QAction::triggered,		ui->viewer,				&Viewer::reset);
 	connect(ui->actionCalibrate,	&QAction::triggered,		ui->tabCalibration,		&TabCalibration::doCalibration);
 	connect(ui->actionSnapshot,		&QAction::triggered,		ui->tabCamera,			&TabCamera::doSnapshot);
-	connect(ui->actionAbout,		&QAction::triggered,		this,					&MainWindow::showAbout);
-	connect(ui->actionExit,			&QAction::triggered,		this,					&MainWindow::close);
 	connect(ui->actionClear,		&QAction::triggered,		images,					&ImageList::clear);
 	connect(ui->actionLoad,			&QAction::triggered,		images,					&ImageList::loadFilePicker);
 	connect(ui->actionSave,			&QAction::triggered,		images,					&ImageList::saveFilePicker);
@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionPrevImage,	&QAction::triggered,		images,					&ImageList::prevImage);
 	connect(ui->actionReset,		&QAction::triggered,		filters,				&FilterList::reset);
 	connect(ui->actionPlay,			&QAction::triggered,		source,					&Source::play);
+
 	connect(ui->actionTabImages,	&QAction::triggered,		[=]() { ui->tabWidget->setCurrentWidget(ui->tabImages); });
 	connect(ui->actionTabFilters,	&QAction::triggered,		[=]() { ui->tabWidget->setCurrentWidget(ui->tabFilters); });
 	connect(ui->actionTabCamera,	&QAction::triggered,		[=]() { ui->tabWidget->setCurrentWidget(ui->tabCamera); });
@@ -53,11 +54,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	updateGeometry();
 	showMaximized();
-}
-
-void MainWindow::showEvent(QShowEvent *)
-{
-	ui->viewer->showImage(images->getCurrent());
 }
 
 MainWindow::~MainWindow()
@@ -72,4 +68,34 @@ void MainWindow::showAbout()
 
 	about.setupUi(&dialog);
 	dialog.exec();
+}
+
+void MainWindow::showImage(Image *i)
+{
+	source->play(false);
+
+	showFrame(i);
+}
+
+void MainWindow::showFrame(Image *i)
+{
+	currentImage = i;
+
+	render();
+}
+
+void MainWindow::render()
+{
+	currentImage->getMat().release();
+
+	try {
+		for (Filter *filter : *filters)
+			filter->apply(currentImage);
+	} catch (Exception e) {
+		qCritical("%s", e.what());
+	}
+
+	qDebug() << "Rendering completed";
+
+	ui->viewer->showImage(currentImage);
 }

@@ -94,8 +94,9 @@ Result * KMeans::applyInternal(Image *img)
 	return new Result;
 }
 
-bool KMeans::clicked(Point p, QMouseEvent *)
+void KMeans::clicked(Point p, QMouseEvent *)
 {
 	colorFilterPoints.append(p);
-	return true;
+
+	emit filterChanged(this);
 }

@@ -30,7 +30,7 @@ class PathResult : public PadResult
 	public:
 		void drawResult(Painter *p) const;
 
-		float getLength() const;
+		double getLength() const;
 		QString getResult() const;
 };
 

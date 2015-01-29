@@ -75,7 +75,7 @@ void Source::tick()
 
 	if (read(m)) {
 		last.setSourceMat(m);
-		emit newImage(&last);
+		emit newFrame(&last);
 	}
 }
 

@@ -1,6 +1,7 @@
 #include <QFileDialog>
 #include <QDir>
 
+#include "painter.h"
 #include "imagelist.h"
 #include "mainwindow.h"
 
@@ -132,7 +133,14 @@ void ImageList::load(QStringList files)
 
 void ImageList::save(QString path)
 {
-	getCurrent()->save(path);
+	Image *img = getCurrent();
+	QImage qimg = img->getQImage();
+	Painter p(&qimg);
+
+	p.setRatio(1e-3 * qimg.width());
+	p.drawOverlay(img);
+
+	qimg.save(path);
 }
 
 void ImageList::loadFilePicker()

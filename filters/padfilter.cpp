@@ -24,10 +24,10 @@ Result * PadFilter::applyInternal(Image *img)
 				result->push_back(pad);
 		}
 
-		for (Point p : addPoints)
+		for (Point2f p : addPoints)
 			result->append(Pad(p));
 
-		for (Point p : delPoints)
+		for (Point2f p : delPoints)
 			result->erase(result->getNearest(p));
 
 		return result;
@@ -44,12 +44,12 @@ void PadFilter::reset()
 	delPoints.clear();
 }
 
-bool PadFilter::clicked(Point p, QMouseEvent *me)
+void PadFilter::clicked(Point p, QMouseEvent *me)
 {
 	if (me->modifiers() & Qt::AltModifier)
-		delPoints.append(p);
+		delPoints.append(Point2f(p));
 	else
-		addPoints.append(p);
+		addPoints.append(Point2f(p));
 
-	return true;
+	emit filterChanged(this);
 }

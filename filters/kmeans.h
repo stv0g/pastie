@@ -14,7 +14,7 @@ class KMeans : public Filter
 		QString getName() const { return "KMeans"; }
 
 		void reset();
-		bool clicked(Point, QMouseEvent *);
+		void clicked(Point, QMouseEvent *);
 
 
 	protected:

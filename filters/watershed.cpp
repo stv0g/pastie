@@ -1,6 +1,6 @@
 #include "watershed.h"
 
-bool Watershed::clicked(Point pos, QMouseEvent *me)
+void Watershed::clicked(Point pos, QMouseEvent *me)
 {
 	qDebug() << getName() << ": Marker " << ((me->modifiers() & Qt::AltModifier) ? "deleted" : "added") << " at:" << toQt(pos);
 
@@ -9,7 +9,7 @@ bool Watershed::clicked(Point pos, QMouseEvent *me)
 	else
 		addMarkers.push_back(pos);
 
-	return true;
+	emit filterChanged(this);
 }
 
 void Watershed::reset()

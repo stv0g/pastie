@@ -29,16 +29,19 @@ class MainWindow : public QMainWindow
 		explicit MainWindow(QWidget *parent = 0);
 		~MainWindow();
 
+		/* Getter */
+		Image * getCurrentImage() { return currentImage; }
+
 	public slots:
 		void showAbout();
+		void showImage(Image *img);
+		void showFrame(Image *img);
+		void render();
 
 	protected:
 		Ui::MainWindow *ui;
 
-		void showEvent(QShowEvent *se);
-
-	signals:
-		void newImage(Image *img);
+		Image *currentImage;
 };
 
 #endif // MAINWINDOW_H

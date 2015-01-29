@@ -26,7 +26,7 @@ Image::~Image()
 
 void Image::load(QString p)
 {
-	if (p != "")
+	if (!p.isNull())
 		path = p;
 
 	source = cv::imread(path.toStdString());
@@ -35,17 +35,10 @@ void Image::load(QString p)
 
 void Image::save(QString p)
 {
-	if (p != "")
+	if (!p.isNull())
 		path = p;
 
 	saved = imwrite(path.toStdString(), getMat());
-}
-
-void Image::applyFilter(Filter *filter)
-{
-	Result *result = filter->apply(this);
-	if (result)
-		results[filter] = result;
 }
 
 Mat & Image::getMat()
@@ -55,6 +48,12 @@ Mat & Image::getMat()
 
 	return filtered;
 }
+
+QImage Image::getQImage()
+{
+	return toQImage(getMat());
+}
+
 
 const Mat & Image::getSourceMat()
 {

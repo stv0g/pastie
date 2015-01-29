@@ -13,8 +13,11 @@ class Pad : public RotatedRect
 		Pad(const Point &p);
 		Pad(const RotatedRect &p);
 
+		/* Getter */
 		double getArea() const { return size.area(); }
 		double getRatio() const { return qMax(size.width, size.height) / qMin(size.width, size.height); }
+		double getDistance(const Pad &b) const { return norm(center - b.center); }
+		double getDistance(const Point2f &b) const { return norm(center - b); }
 		Point2f getCenter() const { return center; }
 		Point2f const * getVertexes() const { return vertexes; }
 

@@ -36,5 +36,14 @@ Result * Filter::apply(Image *img)
 		time = timer.nsecsElapsed();
 	}
 
+	img->results[this] = result;
+
+	emit filterApplied(this);
+
 	return result;
+}
+
+void Filter::settingChanged(Setting *)
+{
+	emit filterChanged(this);
 }

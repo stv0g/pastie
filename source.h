@@ -31,7 +31,7 @@ class Source :
 		void play(bool);
 
 	signals:
-		void newImage(Image *img);
+		void newFrame(Image *img);
 
 	protected slots:
 		void tick();

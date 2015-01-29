@@ -18,6 +18,12 @@ class Viewer : public QGLWidget
 		explicit Viewer(QWidget *parent = 0);
 
 	protected:
+		enum MouseMode {
+			MOUSE_NONE,
+			MOUSE_ZOOMING,
+			MOUSE_DRAGGING
+		} mouseMode;
+
 		void paintEvent(QPaintEvent *pe);
 		void resizeEvent(QResizeEvent *re);
 
@@ -41,7 +47,6 @@ class Viewer : public QGLWidget
 
 	public slots:
 		void showImage(Image *img);
-		void updateImage();
 
 		void reset();
 };

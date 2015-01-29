@@ -2,15 +2,16 @@
 #include <QApplication>
 #include <QCameraInfo>
 
-/* Filters */
 #include "filters.h"
 #include "imagelist.h"
 #include "filterlist.h"
 #include "source.h"
 #include "camera.h"
+#include "robot.h"
 
 Source *source;
 Camera *cam;
+Robot *robot;
 FilterList *filters;
 ImageList *images;
 MainWindow *mwindow;
@@ -27,7 +28,6 @@ int main(int argc, char *argv[])
 	cam = new Camera(source);
 	filters = new FilterList;
 	images = new ImageList;
-	mwindow = new MainWindow;
 
 	QStringList imgs = QCoreApplication::arguments();
 	imgs.removeFirst();
@@ -35,22 +35,25 @@ int main(int argc, char *argv[])
 	images->load(imgs);
 
 	/* Setup pipeline */
-	Pattern *pat = new Pattern(Size(2, 2), Size(60, 60), Pattern::QUADRILINEAR_MARKERS);
-	filters->add(pat);
-	filters->add(new Perspective(cam, pat));
-	filters->add(new Resize(Range<int>(400, 1000)));
+	Pattern *pattern = new Pattern(Size(2, 2), Size(60, 60), Pattern::QUADRILINEAR_MARKERS);
+	PadDetect *pads = new PadDetect();
+	PadFilter *filter = new PadFilter(pads);
+	PathPlanner *planner = new PathPlanner(filter, PathPlanner::REPETETIVE_NEAREST_NEIGHBOUR);
 
+	filters->add(pattern);
+	filters->add(new Perspective(cam, pattern));
+	filters->add(new Resize(Range<int>(400, 1000)));
 	filters->add(new Blur(Blur::GAUSSIAN, Size(3, 3)));
 	filters->add(new KMeans(4));
 	filters->add(new Convert(COLOR_BGR2GRAY));
 	filters->add(new Threshold(Threshold::OTSU));
-
-	PadDetect *pads = new PadDetect();
-	PadFilter *filter = new PadFilter(pads);
-
+	filters->add(new Morph(MORPH_CLOSE, MORPH_RECT));
 	filters->add(pads);
 	filters->add(filter);
-	filters->add(new PathPlanner(filter, PathPlanner::NEAREST_NEIGHBOUR));
+	filters->add(planner);
+
+	robot = new Robot(pattern, planner);
+	mwindow = new MainWindow;
 
 	mwindow->show();
 

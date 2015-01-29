@@ -58,7 +58,7 @@ bool FilterList::setData(const QModelIndex &index, const QVariant &value, int ro
 				case 1: filter->setShow(value == Qt::Checked); break;
 			}
 
-			emit filtersChanged();
+			emit filterChanged(filter);
 			break;
 	}
 
@@ -101,27 +101,10 @@ void FilterList::add(Filter *filter)
 	push_back(filter);
 	endInsertRows();
 
-	connect(filter, SIGNAL(filterChanged()), this, SIGNAL(filtersChanged()));
+	connect(filter, SIGNAL(filterChanged(Filter *)), this, SIGNAL(filterChanged(Filter *)));
+	connect(filter, SIGNAL(filterApplied(Filter*)),  this, SLOT(update(Filter *)));
 
 	emit filterAdded(filter);
-}
-
-void FilterList::execute(Image *img)
-{
-	img->getMat().release();
-
-	try {
-		for (auto filter : *this)
-			img->applyFilter(filter);
-	} catch (Exception e) {
-		qCritical("%s", e.msg.c_str());
-	}
-
-	/* Update times and results */
-	emit dataChanged(
-		createIndex(0, 4),
-		createIndex(size(), 4)
-	);
 }
 
 void FilterList::reset()
@@ -130,7 +113,15 @@ void FilterList::reset()
 	for (Filter *filter : *this)
 		filter->reset();
 
-	emit filtersChanged();
+	emit filterChanged();
+}
+
+void FilterList::update(Filter *f)
+{
+	emit dataChanged(
+		createIndex(indexOf(f),   0),
+		createIndex(indexOf(f)+1, 5)
+	);
 }
 
 Filter * FilterList::getCurrent()

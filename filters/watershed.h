@@ -8,7 +8,7 @@ class Watershed : public Filter
 	public:
 		QString getName() const { return "Watershed"; }
 
-		bool clicked(Point pos, QMouseEvent *me = 0);
+		void clicked(Point pos, QMouseEvent *me = 0);
 
 	public slots:
 		void reset();

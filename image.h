@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QMap>
+#include <QImage>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
@@ -23,8 +24,6 @@ class Image
 		void save(QString path = QString());
 		void load(QString path = QString());
 
-		void applyFilter(Filter *filter);
-
 		/* Getter */
 		bool isLoaded() const { return loaded; }
 		bool isSaved() const { return saved; }
@@ -32,13 +31,14 @@ class Image
 		Result * getResult(Filter *f) { return results[f]; }
 		QString getPath() { return path; }
 		Mat & getMat();
+		QImage getQImage();
 
 		const Mat & getSourceMat();
 		void setSourceMat(const Mat &m);
 
-	protected:
 		QMap<Filter*, Result*> results;
 
+	protected:
 		QString path;
 		Mat source;
 		Mat filtered;
