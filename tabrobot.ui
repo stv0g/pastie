@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>542</width>
-    <height>502</height>
+    <height>670</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -331,29 +331,6 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QPushButton" name="btnCalibrate">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Calibrate</string>
-           </property>
-           <property name="icon">
-            <iconset resource="images.qrc">
-             <normaloff>:/icons/resources/calibrate.png</normaloff>:/icons/resources/calibrate.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="btnStart">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -388,7 +365,30 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="btnCalibrate">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Calibrate</string>
+           </property>
+           <property name="icon">
+            <iconset resource="images.qrc">
+             <normaloff>:/icons/resources/calibrate.png</normaloff>:/icons/resources/calibrate.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnSave">
            <property name="text">
             <string>Save GCode</string>
            </property>
@@ -405,23 +405,171 @@
     </widget>
    </item>
    <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
     <widget class="QWidget" name="wdgSettings" native="true">
-     <layout class="QFormLayout" name="formLayout">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::FieldsStayAtSizeHint</enum>
-      </property>
-      <property name="labelAlignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-      <item row="3" column="0">
-       <widget class="QLabel" name="lblHostPort">
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="5" column="1">
+       <widget class="QWidget" name="wdgCalibPoints" native="true">
+        <layout class="QGridLayout" name="gridLayout_2">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="1" column="1">
+          <widget class="QLabel" name="lblX">
+           <property name="maximumSize">
+            <size>
+             <width>16</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>x</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLabel" name="lblPoint2">
+           <property name="text">
+            <string>2</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QLabel" name="lblPoint3">
+           <property name="text">
+            <string>3</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="lblY">
+           <property name="maximumSize">
+            <size>
+             <width>16</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>y</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="lblZ">
+           <property name="maximumSize">
+            <size>
+             <width>16</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>z</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="lblPoint1">
+           <property name="text">
+            <string>1</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2" colspan="3">
+          <widget class="QDoubleSpinBox" name="inpOffsetZ">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="value">
+            <double>0.800000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QWidget" name="widget_2" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+        </layout>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="lblAccel">
         <property name="text">
-         <string>OctoPrint Server</string>
+         <string>Acceleration</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QWidget" name="widget_4" native="true">
+      <item row="4" column="0">
+       <widget class="QLabel" name="lblBedSize">
+        <property name="text">
+         <string>Bed Size</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="inpSwingZ">
+        <property name="value">
+         <double>6.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QWidget" name="wdgConnect" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="leftMargin">
           <number>0</number>
@@ -496,19 +644,73 @@
         </layout>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="lblApiKey">
-        <property name="text">
-         <string>OctoPrint Key</string>
-        </property>
+      <item row="6" column="1">
+       <widget class="QWidget" name="widget" native="true">
+        <layout class="QGridLayout" name="gridLayout_4">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="1">
+          <widget class="QDoubleSpinBox" name="inpAccelXY">
+           <property name="maximum">
+            <double>6000.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>1500.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="maximumSize">
+            <size>
+             <width>16</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>xy</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label">
+           <property name="maximumSize">
+            <size>
+             <width>16</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>z</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QDoubleSpinBox" name="inpAccelZ">
+           <property name="maximum">
+            <double>6000.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>1500.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QLineEdit" name="lineEdit_2"/>
-      </item>
-      <item row="5" column="1">
-       <widget class="QWidget" name="wdgCalibPoints" native="true">
-        <layout class="QGridLayout" name="gridLayout_2">
+       <widget class="QWidget" name="widget_3" native="true">
+        <layout class="QGridLayout" name="gridLayout_5">
          <property name="leftMargin">
           <number>0</number>
          </property>
@@ -522,171 +724,106 @@
           <number>0</number>
          </property>
          <item row="1" column="1">
-          <widget class="QLineEdit" name="inpY1"/>
-         </item>
-         <item row="0" column="2">
-          <widget class="QLabel" name="lblZ">
-           <property name="text">
-            <string>z</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
+          <widget class="QDoubleSpinBox" name="inpBedSizeY">
+           <property name="value">
+            <double>17.000000000000000</double>
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
-          <widget class="QLineEdit" name="inpZ1"/>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLineEdit" name="inpX4"/>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="inpY2"/>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLineEdit" name="inpX1"/>
+         <item row="0" column="1">
+          <widget class="QDoubleSpinBox" name="inpBedSizeX">
+           <property name="value">
+            <double>17.000000000000000</double>
+           </property>
+          </widget>
          </item>
          <item row="0" column="0">
-          <widget class="QLabel" name="lblX">
+          <widget class="QLabel" name="lblBedSizeX">
+           <property name="maximumSize">
+            <size>
+             <width>16</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="text">
             <string>x</string>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
           </widget>
          </item>
-         <item row="2" column="2">
-          <widget class="QLineEdit" name="inpZ2"/>
-         </item>
-         <item row="4" column="2">
-          <widget class="QLineEdit" name="inpZ4"/>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLineEdit" name="inpX3"/>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLineEdit" name="inpY3"/>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLineEdit" name="inpX2"/>
-         </item>
-         <item row="3" column="2">
-          <widget class="QLineEdit" name="inpZ3"/>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLineEdit" name="inpY4"/>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="lblY">
+         <item row="1" column="0">
+          <widget class="QLabel" name="lblBedSizeY">
+           <property name="maximumSize">
+            <size>
+             <width>16</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="text">
             <string>y</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <widget class="QPushButton" name="pushButton_2">
-           <property name="minimumSize">
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="images.qrc">
-             <normaloff>:/icons/resources/start-here.png</normaloff>:/icons/resources/start-here.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="QPushButton" name="pushButton_3">
-           <property name="minimumSize">
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="images.qrc">
-             <normaloff>:/icons/resources/start-here.png</normaloff>:/icons/resources/start-here.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3">
-          <widget class="QPushButton" name="pushButton_4">
-           <property name="minimumSize">
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="images.qrc">
-             <normaloff>:/icons/resources/start-here.png</normaloff>:/icons/resources/start-here.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="3">
-          <widget class="QPushButton" name="pushButton_5">
-           <property name="minimumSize">
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="images.qrc">
-             <normaloff>:/icons/resources/start-here.png</normaloff>:/icons/resources/start-here.png</iconset>
            </property>
           </widget>
          </item>
         </layout>
        </widget>
       </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="inpApiKey"/>
+      </item>
       <item row="5" column="0">
        <widget class="QLabel" name="lblCalibPoints">
         <property name="text">
          <string>Calibaration Points</string>
         </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lblApiKey">
+        <property name="text">
+         <string>OctoPrint Key</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lblHostPort">
+        <property name="text">
+         <string>OctoPrint Server</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lblSwingZ">
+        <property name="text">
+         <string>z Swing</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lblBedShape">
+        <property name="text">
+         <string>Bed Shape</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QComboBox" name="cmbBedShape">
+        <item>
+         <property name="text">
+          <string comment="1">Circular</string>
+         </property>
+         <property name="icon">
+          <iconset resource="images.qrc">
+           <normaloff>:/icons/resources/bed_circ.png</normaloff>:/icons/resources/bed_circ.png</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="0">Rectangular</string>
+         </property>
+         <property name="icon">
+          <iconset resource="images.qrc">
+           <normaloff>:/icons/resources/bed_rect.png</normaloff>:/icons/resources/bed_rect.png</iconset>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
