@@ -46,6 +46,7 @@
 #include "filters/pathplanner.h"
 #include "filters/resize.h"
 #include "filters/rotate.h"
+#include "filters/homography.h"
 
 #endif // FILTERS_H
 

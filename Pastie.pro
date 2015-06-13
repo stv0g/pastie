@@ -43,7 +43,8 @@ SOURCES += main.cpp\
     filters/padfilter.cpp \
     rangeslider.cpp \
     filters/rectify.cpp \
-    filters/rotate.cpp
+    filters/rotate.cpp \
+    filters/homography.cpp
 
 HEADERS += mainwindow.h \
     camera.h \
@@ -78,7 +79,8 @@ HEADERS += mainwindow.h \
     rangeslider.h \
     range.h \
     filters/rectify.h \
-    filters/rotate.h
+    filters/rotate.h \
+    filters/homography.h
 
 SOURCES += filters/filter.cpp \
     filters/undistort.cpp \
